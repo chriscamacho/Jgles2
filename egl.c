@@ -21,22 +21,19 @@ JNIEXPORT jstring JNICALL Java_Jgles2_EGL_eglQueryString
     QueryString = eglQueryString((EGLDisplay)d, (EGLint)n);
     return (*e)->NewStringUTF(e, QueryString); 
 }
-  
-JNIEXPORT jlong JNICALL Java_Jgles2_EGL_eglChooseConfig
-                                (JNIEnv *env, jclass c, jlong d, jobject a) 
-{
-    EGLConfig configs;
-    EGLint num_config;
-    
-    EGLint const* attribs = (EGLint const*)(*env)->GetDirectBufferAddress(env, a);
-    
-    int r = eglChooseConfig((EGLDisplay)d,attribs,&configs,1,&num_config);
-        
-    if (r) {
-        return (jlong)configs;
-    }
 
-    return 0; // fail!
+JNIEXPORT jboolean JNICALL Java_Jgles2_EGL_eglChooseConfig
+  (JNIEnv *env, jclass c, jlong display, jobject jattribs, jobject jconfigs, jint size, jobject jnum)
+{
+    int num=0;
+    EGLint const* attribs = (EGLint const*)(*env)->GetDirectBufferAddress(env, jattribs);
+    void* configs = (void*)(*env)->GetDirectBufferAddress(env, jconfigs);
+    
+    int r = eglChooseConfig((EGLDisplay)display,attribs,configs,size,&num);
+    EGLint* ret = (EGLint*)((*env)->GetDirectBufferAddress(env, jnum));
+    ret[0] = num;
+   
+    return r;
 }
 
 JNIEXPORT jlong JNICALL Java_Jgles2_EGL_eglCreateContext

@@ -2,6 +2,7 @@
 package Jgles2;
 
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 public class EGL {
     
@@ -111,9 +112,8 @@ public class EGL {
     static public native long eglGetDisplay(long native_display);
     static public native boolean eglInitialize(long egl_display);
     static public native String eglQueryString(long egl_display, int name);
-    
-    // differs as only selects one config and returns config pointer not success bool
-    static public native long eglChooseConfig(long egl_display, IntBuffer attribs);
+    static public native boolean eglChooseConfig(long display, IntBuffer attribs,
+                                        LongBuffer configs, int config_size, IntBuffer num_config);
         
     static public native long eglCreateContext(long egl_display, long config, long share, IntBuffer ctx_attribs );    
     static public native int eglQueryContext(long egl_display, long context, int attrib, IntBuffer val);

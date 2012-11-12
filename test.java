@@ -5,7 +5,7 @@ import Jgles2.BufferUtils; // TODO chop out just routines needed and put into Jg
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
-
+import java.nio.LongBuffer;
 
 public class test {
     
@@ -19,11 +19,16 @@ public class test {
     // the main none static method...
     public void run() {
         
+        // minimum of 1 usually chooses lowest which is usually practical!
+        // comment out depth and or alpha to see a different number of
+        // available configs
+        // first config (0) is deemed by EGL's selection method to be "best" match
         int attribs[] = {
-            EGL.EGL_RED_SIZE, 8, 
-            EGL.EGL_GREEN_SIZE, 8,
-            EGL.EGL_BLUE_SIZE, 8,
-            EGL.EGL_DEPTH_SIZE, 8,
+            EGL.EGL_RED_SIZE, 1, 
+            EGL.EGL_GREEN_SIZE, 1,
+            EGL.EGL_BLUE_SIZE, 1,
+            EGL.EGL_ALPHA_SIZE, 1,
+            EGL.EGL_DEPTH_SIZE, 1,
             EGL.EGL_RENDERABLE_TYPE, EGL.EGL_OPENGL_ES2_BIT,
             EGL.EGL_NONE // end of list
         };
@@ -64,15 +69,38 @@ public class test {
         System.out.println("EGL_EXTENSIONS = "+s);
         s = EGL.eglQueryString(egl_display, EGL.EGL_CLIENT_APIS);
         System.out.println("EGL_CLIENT_APIS = "+s);
+
+        // val is a single integer intBuffer which is reused for various single int return values
+        IntBuffer val = BufferUtils.createIntBuffer(1);
+
         
-        // TODO ? use long buffer to return N configs ?
-        long config = EGL.eglChooseConfig(egl_display,attribsBuffer);
-        if (config==0) {
+        int config_size=32; // wouldn't normally check that many - just for testing!
+        LongBuffer configsBuffer = BufferUtils.createLongBuffer(config_size);
+        
+        if (!EGL.eglChooseConfig(egl_display, attribsBuffer,
+                                    configsBuffer, config_size, val)) {
             System.out.println("failed to get an EGL config");
-            System.exit(-1);
-        } else {
-            System.out.println("found an EGL config");
+            System.exit(-1);            
         }
+        int num=val.get(0);
+        System.out.println("found "+num+ " configs");
+        for (int i=0;i<num;i++) {
+            long cfg = configsBuffer.get(i);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_RED_SIZE, val);
+            int r = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_DEPTH_SIZE, val);
+            int d = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_ALPHA_SIZE, val);
+            int a = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_CONFIG_ID, val);
+            int id = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_NATIVE_RENDERABLE, val);
+            int nr = val.get(0);
+            System.out.println("config #"+i+" ID"+id+" RED"+r+" DEPTH"+d+" ALPHA"+a+" NR"+nr);
+            // well the ID's are different anyhow ;)
+        }
+        
+        long config=configsBuffer.get(0); 
         
         long native_win = util.make_native_window(native_display, egl_display, config,
                     0, 0, winWidth, winHeight, false);
@@ -86,10 +114,8 @@ public class test {
         }
         
         // test query context
-        IntBuffer val = BufferUtils.createIntBuffer(1);
         EGL.eglQueryContext(egl_display, egl_context, EGL.EGL_CONTEXT_CLIENT_VERSION, val);
         System.out.println("context client version "+val.get(0));
-        
         
         long egl_surface = EGL.eglCreateWindowSurface(egl_display, config, native_win, null);
         if (egl_surface == 0) {
@@ -232,7 +258,7 @@ public class test {
         
         
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (Exception e) {
             // nada
         }
