@@ -1,0 +1,48 @@
+<project name="Jgles2" default="run" basedir=".">
+    <description>
+        ant build/run file
+    </description>
+
+    <target name="jni">
+        <exec executable="make">
+            <arg line="-f jni/Makefile"/>
+        </exec>
+    </target>
+
+    <target 
+        name="compileTest"
+        depends="jni"
+        description="compile the test " >
+            <fileset dir="Jgles2" includes="**/*.class"/>
+            <fileset dir="." includes="**/*.class"/>
+        <javac 
+                srcdir=".:Jgles2"
+                classpath="."
+                includeantruntime="false"
+                debug="on"
+                debuglevel="lines,vars,source">
+            <compilerarg value="-Xlint:all" />
+            <compilerarg value="-Werror" />
+            
+        </javac>
+    </target>
+    
+    
+    <target name="run" depends="jni,compileTest">
+        <java
+                fork="true"
+                classname="test"
+                classpath=".">
+            <sysproperty key="java.library.path" value="."/>
+        </java>
+    </target>        
+    
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir="." includes="**/*.class" defaultexcludes="false"/>
+            <fileset dir="Jgles2" includes="**/*.class" defaultexcludes="false"/>
+            <fileset dir="." includes="libJgles2.so" defaultexcludes="false"/>
+            <fileset dir="jni" includes="**/*.o" defaultexcludes="false"/>
+        </delete>
+    </target>
+</project>
