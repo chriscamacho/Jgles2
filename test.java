@@ -1,50 +1,23 @@
 import Jgles2.util;
 import Jgles2.EGL;
 import Jgles2.GLES2;
-
-// borrowed
 import Jgles2.BufferUtils;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
 
-//import java.awt.event;
-import java.awt.event.*;
-import java.awt.Toolkit;
-import java.awt.AWTEvent;
-
 public class test {
     
     test() {
-        AWTEventListener listener = new AWTEventListener() {
-            @Override public void eventDispatched(AWTEvent event) {
-                try {
-                    KeyEvent evt = (KeyEvent)event;
-                    if(evt.getID() == KeyEvent.KEY_PRESSED && evt.getModifiers() == KeyEvent.CTRL_MASK && evt.getKeyCode() == KeyEvent.VK_F) {
-                        System.exit(0);
-                    }
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
             
     }
     
     static final int winWidth = 640;
     static final int winHeight = 480;
     
-    // the main none static method...
     public void run() {
         
-        // minimum of 1 usually chooses lowest which is usually practical!
-        // comment out depth and or alpha to see a different number of
-        // available configs
-        // first config (0) is deemed by EGL's selection method to be "best" match
         int attribs[] = {
             EGL.EGL_RED_SIZE, 1, 
             EGL.EGL_GREEN_SIZE, 1,
@@ -60,7 +33,6 @@ public class test {
             EGL.EGL_NONE // end of list
         };
         
-        // jvm spec says arrays not contigious + need unpacked raw ints...
         IntBuffer attribsBuffer = BufferUtils.createIntBuffer(attribs.length);
         attribsBuffer.put(attribs);
         
@@ -68,14 +40,9 @@ public class test {
         ctx_attribsBuffer.put(ctx_attribs);
         
         long native_display = util.get_native_display();
-        System.out.println("native display "+native_display);
-        
         long egl_display = EGL.eglGetDisplay( native_display );
-        System.out.println("EGL display "+egl_display);
         
-        if (EGL.eglInitialize(egl_display)) {
-            System.out.println("EGL initialised");
-        } else {
+        if (!EGL.eglInitialize(egl_display)) {
             System.out.println("EGL failed to initialise");
             System.exit(-1);
         }
@@ -91,7 +58,6 @@ public class test {
 
         // val is a single integer intBuffer which is reused for various single int return values
         IntBuffer val = BufferUtils.createIntBuffer(1);
-
         
         int config_size=32; // wouldn't normally check that many - just for testing!
         LongBuffer configsBuffer = BufferUtils.createLongBuffer(config_size);
@@ -105,18 +71,12 @@ public class test {
         System.out.println("found "+num+ " configs");
         for (int i=0;i<num;i++) {
             long cfg = configsBuffer.get(i);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_RED_SIZE, val);
-            int r = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_DEPTH_SIZE, val);
-            int d = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_ALPHA_SIZE, val);
-            int a = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_CONFIG_ID, val);
-            int id = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_NATIVE_RENDERABLE, val);
-            int nr = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_RED_SIZE, val);           int r = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_DEPTH_SIZE, val);         int d = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_ALPHA_SIZE, val);         int a = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_CONFIG_ID, val);          int id = val.get(0);
+            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_NATIVE_RENDERABLE, val);  int nr = val.get(0);
             System.out.println("config #"+i+" ID"+id+" RED"+r+" DEPTH"+d+" ALPHA"+a+" NR"+nr);
-            // well the ID's are different anyhow ;)
         }
         
         long config=configsBuffer.get(0); 
@@ -128,8 +88,6 @@ public class test {
         if (egl_context==0) {
             System.out.println("failed to get an EGL context");
             System.exit(-1);
-        } else {
-            System.out.println("got an EGL context");
         }
         
         // test query context
@@ -140,8 +98,6 @@ public class test {
         if (egl_surface == 0) {
             System.out.println("failed to create a windowed surface");
             System.exit(-1);
-        } else {
-            System.out.println("created a windowed surface");
         }
         
         EGL.eglQuerySurface(egl_display, egl_surface, EGL.EGL_WIDTH, val);
@@ -151,9 +107,7 @@ public class test {
         EGL.eglGetConfigAttrib(egl_display, config, EGL.EGL_SURFACE_TYPE, val);
         System.out.println("window bit "+(val.get(0) & EGL.EGL_WINDOW_BIT));        
         
-        if (EGL.eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context)) {
-            System.out.println("made context current");
-        } else {
+        if (!EGL.eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context)) {
             System.out.println("eglMakeCurrent failed");
             System.out.println("error code " + Integer.toHexString(EGL.eglGetError()));
             System.exit(-1);
@@ -246,7 +200,6 @@ public class test {
         vertsBuffer.put(verts);
         FloatBuffer coloursBuffer = BufferUtils.createFloatBuffer(colours.length);
         coloursBuffer.put(colours);
-
         
         // kmMat4 struct is 16 floats (love the KISS principle)
         FloatBuffer view = BufferUtils.createFloatBuffer(16);
@@ -255,14 +208,11 @@ public class test {
         FloatBuffer eye = BufferUtils.createFloatBuffer(3);
         FloatBuffer centre = BufferUtils.createFloatBuffer(3);
         FloatBuffer up = BufferUtils.createFloatBuffer(3);
-        FloatBuffer viewDir = BufferUtils.createFloatBuffer(3);
         
-        util.kmVec3Fill(eye,    0,0,0);
-        util.kmVec3Fill(centre, 0,0,-5);
-        util.kmVec3Fill(up,     0,1,0);
+        util.kmVec3Fill(eye,    0, 0, 0);
+        util.kmVec3Fill(centre, 0, 0,-5);
+        util.kmVec3Fill(up,     0, 1, 0);
 
-        util.kmVec3Subtract(viewDir,eye,centre);
-        util.kmVec3Normalize(viewDir,viewDir);
         util.kmMat4LookAt(view, eye, centre, up);
 
         FloatBuffer projection = BufferUtils.createFloatBuffer(16);
