@@ -41,3 +41,18 @@ So is it ready to rock and roll ?
 No! well close(ish) at the moment the only thing the test class does
 is flash up a window with a coloured trangle in it for a few seconds.
  
+
+
+a Makefile, REALLY??? whats wrong with ant?
+
+yeah yeah I know, I should have an ant build file, but this all started
+off as a simple C example that gradually morphed into a jni library
+theres tonnes of stuff still to do and it depends both on my time and
+the level of contributions
+
+
+
+I'd like to chat to talk about how I might help?
+
+my email account is codifies with googles mail service.
+ 
