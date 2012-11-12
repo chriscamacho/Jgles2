@@ -6,7 +6,6 @@ LIBS = `pkg-config egl --libs` `pkg-config glesv2 --libs` -lm -lc -lX11
 CFLAGS = -fPIC `pkg-config egl --cflags` `pkg-config glesv2 --cflags` -I$(JAVA_HOME)/include/ -Ikazmath/
 OBJ = jni/util.o jni/egl.o jni/gles2.o
 
-
 #kazmath
 KAZ=$(shell find kazmath/*.c | sed 's/\(.*\.\)c/\1o/g' | sed 's/kazmath\//kazmath\//g')
 
@@ -20,14 +19,14 @@ kazmath/%.o: kazmath/%.c
 kazmath/libkazmath.a: $(KAZ)
 	ar -cvq kazmath/libkazmath.a $(KAZ) 
 	
-util.o: jni/util.c jni/Jgles2_util.h 
-	$(CC) $(CFLAGS) -c $< -o jni/$@
+jni/util.o: jni/util.c jni/Jgles2_util.h
+	$(CC) $(CFLAGS) -c $< -o $@
 	
-egl.o: jni/egl.c jni/Jgles2_EGL.h
-	$(CC) $(CFLAGS) -c $< -o jni/$@
+jni/egl.o: jni/egl.c jni/Jgles2_EGL.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-gles2.o: jni/gles2.c jni/Jgles2_GLES2.h
-	$(CC) $(CFLAGS) -c $< -o jni/$@
+jni/gles2.o: jni/gles2.c jni/Jgles2_GLES2.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 jni/Jgles2_util.h: Jgles2/util.java
 	javac Jgles2/util.java

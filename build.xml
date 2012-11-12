@@ -45,6 +45,7 @@
             <fileset dir="jni" includes="**/*.o" defaultexcludes="false"/>
             <fileset dir="kazmath" includes="libkazmath.a" defaultexcludes="false"/>
             <fileset dir="kazmath" includes="**/*.o" defaultexcludes="false"/>
+            <fileset dir="jni" includes="**/Jgles2_*.h" defaultexcludes="false"/>
         </delete>
     </target>
 </project>
