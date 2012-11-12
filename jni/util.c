@@ -5,10 +5,13 @@
 
 #include <string.h> // memset
 
+#include <vec3.h>
+#include <mat4.h>
+
 // only one platform sould be defined!
 #define XORG 1      // native mesa gles
 #define MACOS 1     // use subset of opengl 2.0 ?
-#define MSWIN 1     // 
+#define MSWIN 1     // angle project
 
 JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject o) {
     #ifdef XORG
@@ -98,4 +101,126 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
     
     return native_win;
     #endif // XORG
+}
+
+//    public static native FloatBuffer kmMat4Identity(FloatBuffer mat);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4Identity
+  (JNIEnv * e, jclass c, jobject m)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4Identity(mat);
+    return m;
+}
+
+//    public static native FloatBuffer kmVec3Fill(FloatBuffer v, float x, float y, float z);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmVec3Fill
+  (JNIEnv *e, jclass c, jobject v, jfloat x, jfloat y, jfloat z)
+{
+    kmVec3* vec = (kmVec3*)(*e)->GetDirectBufferAddress(e, v);
+    kmVec3Fill(vec,(float)x,(float)y,(float)z);
+    return v;
+}
+
+//    public static native FloatBuffer kmVec3Subtract(FloatBuffer out,FloatBuffer p1,FloatBuffer p2);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmVec3Subtract
+  (JNIEnv *e, jclass c, jobject o, jobject a, jobject b)
+{
+    kmVec3* out = (kmVec3*)(*e)->GetDirectBufferAddress(e, o);
+    kmVec3* p1 = (kmVec3*)(*e)->GetDirectBufferAddress(e, a);
+    kmVec3* p2 = (kmVec3*)(*e)->GetDirectBufferAddress(e, b);
+    kmVec3Subtract(out,p1,p2);
+    return o;
+}
+
+//     public static native FloatBuffer kmVec3Normalize(FloatBuffer out,FloatBuffer in);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmVec3Normalize
+  (JNIEnv *e, jclass c, jobject o, jobject i)
+{
+    kmVec3* out = (kmVec3*)(*e)->GetDirectBufferAddress(e, o);
+    kmVec3* in = (kmVec3*)(*e)->GetDirectBufferAddress(e, i);
+    kmVec3Normalize(out,in);
+    return o;    
+}
+
+//     public static native Float kmVec3Length(FloatBuffer in);
+JNIEXPORT jfloat JNICALL Java_Jgles2_util_kmVec3Length
+  (JNIEnv *e, jclass c, jobject i)
+{
+    kmVec3* in = (kmVec3*)(*e)->GetDirectBufferAddress(e, i);
+    return (jfloat)kmVec3Length(in);
+}
+
+//    public static native FloatBuffer kmMat4LookAt(FloatBuffer view,FloatBuffer eye,FloatBuffer centre,FloatBuffer up);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4LookAt
+  (JNIEnv *env, jclass cls, jobject v, jobject e, jobject c, jobject u)
+{
+    kmMat4* view = (kmMat4*)(*env)->GetDirectBufferAddress(env, v);
+    kmVec3* eye = (kmVec3*)(*env)->GetDirectBufferAddress(env, e);    
+    kmVec3* centre = (kmVec3*)(*env)->GetDirectBufferAddress(env, c);    
+    kmVec3* up = (kmVec3*)(*env)->GetDirectBufferAddress(env, u);
+    kmMat4LookAt(view,eye,centre,up);
+    return v;    
+}
+
+//    public static native FloatBuffer kmMat4PerspectiveProjection(FloatBuffer projection, float fov,
+//                                float aspect, float near, float far);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4PerspectiveProjection
+  (JNIEnv *e, jclass c, jobject p, jfloat fov, jfloat aspect, jfloat near, jfloat far)
+{
+    kmMat4* proj = (kmMat4*)(*e)->GetDirectBufferAddress(e, p);
+    kmMat4PerspectiveProjection(proj,fov,aspect,near,far);
+    return p;
+}
+
+//     public static native FloatBuffer kmMat4Multiply(FloatBuffer out,FloatBuffer mat1,FloatBuffer mat2);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4Multiply
+  (JNIEnv *e, jclass c, jobject o, jobject m1, jobject m2)
+{
+    kmMat4* out = (kmMat4*)(*e)->GetDirectBufferAddress(e, o);
+    kmMat4* mat1 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m1);
+    kmMat4* mat2 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m2);
+    kmMat4Multiply(out,mat1,mat2);
+    return o;    
+}
+
+//    public static native FloatBuffer kmMat4Translation(FloatBuffer mat, float x, float y, float z);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4Translation
+  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4Translation(mat,x,y,z);
+    return m;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4RotationX
+  (JNIEnv *e, jclass c, jobject m, jfloat rad)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4RotationX(mat,rad);
+    return m;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4RotationY
+  (JNIEnv *e, jclass c, jobject m, jfloat rad)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4RotationY(mat,rad);
+    return m;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4RotationZ
+  (JNIEnv *e, jclass c, jobject m, jfloat rad)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4RotationZ(mat,rad);
+    return m;
+}
+
+//    public static native FloatBuffer kmMat4RotationPitchYawRoll(FloatBuffer mat, float x, float y, float z);
+JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4RotationPitchYawRoll
+  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4RotationPitchYawRoll(mat,x,y,z);
+    return m;
 }

@@ -9,11 +9,30 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
 
+//import java.awt.event;
+import java.awt.event.*;
+import java.awt.Toolkit;
+import java.awt.AWTEvent;
 
 public class test {
     
     test() {
-        // default constructormartor does nothing
+        AWTEventListener listener = new AWTEventListener() {
+            @Override public void eventDispatched(AWTEvent event) {
+                try {
+                    KeyEvent evt = (KeyEvent)event;
+                    if(evt.getID() == KeyEvent.KEY_PRESSED && evt.getModifiers() == KeyEvent.CTRL_MASK && evt.getKeyCode() == KeyEvent.VK_F) {
+                        System.exit(0);
+                    }
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
+            
     }
     
     static final int winWidth = 640;
@@ -227,40 +246,72 @@ public class test {
         vertsBuffer.put(verts);
         FloatBuffer coloursBuffer = BufferUtils.createFloatBuffer(colours.length);
         coloursBuffer.put(colours);
+
         
-        float matrix[] = {
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
-        };
+        // kmMat4 struct is 16 floats (love the KISS principle)
+        FloatBuffer view = BufferUtils.createFloatBuffer(16);
+        util.kmMat4Identity(view);
 
-        FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(matrix.length);
-        matrixBuffer.put(matrix);
-
-        GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, matrixBuffer);
-
-
-        GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
+        FloatBuffer eye = BufferUtils.createFloatBuffer(3);
+        FloatBuffer centre = BufferUtils.createFloatBuffer(3);
+        FloatBuffer up = BufferUtils.createFloatBuffer(3);
+        FloatBuffer viewDir = BufferUtils.createFloatBuffer(3);
         
-        GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
-        GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
-        GLES2.glEnableVertexAttribArray(attr_pos);
-        GLES2.glEnableVertexAttribArray(attr_color);
+        util.kmVec3Fill(eye,    0,0,0);
+        util.kmVec3Fill(centre, 0,0,-5);
+        util.kmVec3Fill(up,     0,1,0);
 
-        GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
+        util.kmVec3Subtract(viewDir,eye,centre);
+        util.kmVec3Normalize(viewDir,viewDir);
+        util.kmMat4LookAt(view, eye, centre, up);
 
-        GLES2.glDisableVertexAttribArray(attr_pos);
-        GLES2.glDisableVertexAttribArray(attr_color);
-                
-        EGL.eglSwapBuffers(egl_display, egl_surface);    
+        FloatBuffer projection = BufferUtils.createFloatBuffer(16);
+        util.kmMat4Identity(projection);
         
+        util.kmMat4PerspectiveProjection(projection, 45f,
+                                (float)winWidth / winWidth, 0.1f, 10);
+
+        FloatBuffer vp = BufferUtils.createFloatBuffer(16);
+        util.kmMat4Identity(vp);
+        util.kmMat4Multiply(vp,view,projection);
         
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            // nada
+        FloatBuffer model = BufferUtils.createFloatBuffer(16);
+        FloatBuffer mvp = BufferUtils.createFloatBuffer(16);
+        util.kmMat4Identity(mvp);
+        
+        for(float frame=0;frame<240;frame++) {
+            
+            util.kmMat4Identity(model);
+
+            util.kmMat4Translation(model,0,0,-5+((float)Math.sin(frame/20f)*2f));            
+            util.kmMat4RotationPitchYawRoll(model,  frame/10f,
+                                                    frame/20f,
+                                                    frame/30f);
+            util.kmMat4Multiply(mvp,vp,model);
+
+            GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
+
+            GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
+            
+            GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
+            GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
+            GLES2.glEnableVertexAttribArray(attr_pos);
+            GLES2.glEnableVertexAttribArray(attr_color);
+
+            GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
+
+            GLES2.glDisableVertexAttribArray(attr_pos);
+            GLES2.glDisableVertexAttribArray(attr_color);
+                    
+            EGL.eglSwapBuffers(egl_display, egl_surface);    
+
+            try {
+                Thread.sleep(20);
+            } catch (Exception e) {
+                // nada
+            }
         }
+
     }
 
     public static void main(String[] args) {

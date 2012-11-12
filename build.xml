@@ -43,6 +43,8 @@
             <fileset dir="Jgles2" includes="**/*.class" defaultexcludes="false"/>
             <fileset dir="." includes="libJgles2.so" defaultexcludes="false"/>
             <fileset dir="jni" includes="**/*.o" defaultexcludes="false"/>
+            <fileset dir="kazmath" includes="libkazmath.a" defaultexcludes="false"/>
+            <fileset dir="kazmath" includes="**/*.o" defaultexcludes="false"/>
         </delete>
     </target>
 </project>
