@@ -1,11 +1,14 @@
 import Jgles2.util;
 import Jgles2.EGL;
 import Jgles2.GLES2;
-import Jgles2.BufferUtils; // TODO chop out just routines needed and put into Jgles2.util
+
+// borrowed
+import Jgles2.BufferUtils;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
+
 
 public class test {
     
@@ -38,15 +41,12 @@ public class test {
             EGL.EGL_NONE // end of list
         };
         
-        // TODO create from array contents
         // jvm spec says arrays not contigious + need unpacked raw ints...
         IntBuffer attribsBuffer = BufferUtils.createIntBuffer(attribs.length);
-        for (int i : attribs)
-            attribsBuffer.put(i);
-            
+        attribsBuffer.put(attribs);
+        
         IntBuffer ctx_attribsBuffer = BufferUtils.createIntBuffer(ctx_attribs.length);
-        for (int i : ctx_attribs)
-            ctx_attribsBuffer.put(i);
+        ctx_attribsBuffer.put(ctx_attribs);
         
         long native_display = util.get_native_display();
         System.out.println("native display "+native_display);
@@ -224,9 +224,9 @@ public class test {
         };
 
         FloatBuffer vertsBuffer = BufferUtils.createFloatBuffer(verts.length);
-        for (float f : verts) vertsBuffer.put(f);
+        vertsBuffer.put(verts);
         FloatBuffer coloursBuffer = BufferUtils.createFloatBuffer(colours.length);
-        for (float f : colours) coloursBuffer.put(f);
+        coloursBuffer.put(colours);
         
         float matrix[] = {
             1.0f, 0.0f, 0.0f, 0.0f,
@@ -236,9 +236,11 @@ public class test {
         };
 
         FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(matrix.length);
-        for (float f : matrix) matrixBuffer.put(f);
+        matrixBuffer.put(matrix);
 
         GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, matrixBuffer);
+
+
         GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
         
         GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
@@ -250,10 +252,7 @@ public class test {
 
         GLES2.glDisableVertexAttribArray(attr_pos);
         GLES2.glDisableVertexAttribArray(attr_color);
-        
-
-
-        
+                
         EGL.eglSwapBuffers(egl_display, egl_surface);    
         
         
