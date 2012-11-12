@@ -12,10 +12,10 @@ Why not just use LWJGL or <insert your binding of choice here> ?
 
 LWJGL is a fantastic library to use and it makes a great "driver"
 layer for higher level libraries such as libGDX, however it's not "pure"
-GLES 2.0 obviously if there is an identical function in GL 1.0 and 
-GL 2.0 you're not going to duplicate so you end up having to use GL10 
+GLES 2.0.  Obviously if there is an identical function in GL 1.0 and 
+GL 2.0 you're not going to duplicate.  So you end up having to use GL10 
 and GL20 static classes (and sometimes you forget what lives where)
-At the time of reading LWJGL's GLES2.0 classes are not included in
+At the time of writing LWJGL's GLES 2.0 classes are not included in
 the binary download. 
 
 
