@@ -229,8 +229,9 @@ public class test {
         FloatBuffer mvp = BufferUtils.createFloatBuffer(16);
         util.kmMat4Identity(mvp);
         
-        for(float frame=0;frame<240;frame++) {
-            
+        float frame=0;
+        while( util.keyDown(9) ) {
+            frame++;
             util.kmMat4Identity(model);
 
             util.kmMat4Translation(model,0,0,-5+((float)Math.sin(frame/20f)*2f));            
@@ -259,6 +260,19 @@ public class test {
                 Thread.sleep(20);
             } catch (Exception e) {
                 // nada
+            }
+            
+            util.pumpEvents(native_display,native_win);
+            
+            if (util.resizeRequired()) {
+                int w=util.getWidth();
+                int h=util.getHeight();
+                GLES2.glViewport(0, 0, w, h);
+                util.kmMat4PerspectiveProjection(projection, 45f,
+                                        (float)w / h, 0.1f, 10); 
+                util.kmMat4Identity(vp);
+                util.kmMat4Multiply(vp,view,projection);                
+                util.resized();
             }
         }
 

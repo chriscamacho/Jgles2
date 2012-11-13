@@ -4,7 +4,7 @@
     </description>
 
     <target name="jni">
-        <exec executable="make">
+        <exec executable="make" failonerror="true">
             <arg line="-f jni/Makefile"/>
         </exec>
     </target>

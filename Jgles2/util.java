@@ -4,15 +4,22 @@ package Jgles2;
 import java.nio.FloatBuffer;
 
 public class util {
+
     static {
         System.loadLibrary("Jgles2");
     }
-    
+
     public static native long get_native_display();
     public static native long make_native_window(long native_display,
                             long egl_display, long config, int x, int y, 
                             int width, int height, boolean fullscreen);
-                            
+    public static native void pumpEvents(long xDisplay,long win);
+    public static native boolean resizeRequired();
+    public static native void resized();
+    public static native int getWidth();
+    public static native int getHeight();
+    public static native boolean keyDown(int k);
+    
 
     // kazmath
     public static native FloatBuffer kmMat4Identity(FloatBuffer mat);

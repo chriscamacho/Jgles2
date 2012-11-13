@@ -1,6 +1,10 @@
 
 Jgles2
 
+
+NB see porting at the end...
+
+
 Why GLES 2.0?
 
 it makes a very nice subset of the various versions of opengl, and its
@@ -38,17 +42,40 @@ Its fairly close but there are some slight differences for convenience
 
 So is it ready to rock and roll ?
 
-No! well close(ish) at the moment the only thing the test class does
-is flash up a window with a coloured trangle in it for a few seconds.
- 
+...well close(ish) at the moment the test class shows a single triangle
+rotating and moving in a 3d view and exits when the escape key is pressed
 
 
-a Makefile, REALLY??? whats wrong with ant?
 
-yeah yeah I know, I should have an ant build file, but this all started
-off as a simple C example that gradually morphed into a jni library
-theres tonnes of stuff still to do and it depends both on my time and
-the level of contributions
+Porting - you can help
+
+If you want to port Jgles to your platform (it would certainly be
+apreciated) I have marked any platform specific with #ifdef XORG
+
+Currently there are just 3 critical sections
+
+get_native_display() - returns the native handle used to create the EGL
+display handle
+
+make_native_window(
+    native_display,     the native display handle
+    egl_display         the EGL display handle
+    config              the chosen EGL config
+    x, y,               position on the screen
+    width, height,      width/height of window 
+    fullscreen)         should it be fullscreen without decoration
+
+pumpEvents(native_Display,native_window)
+this is resposible for collection keyboard and mouse events
+and notifying the application that the screen needs resizing
+its is responsible for modifying the following global variables
+the jni wrapper uses.
+
+bool __keys[256];       keydown flags
+int __mouse[3];         x,y,buttons
+bool __resize=false;    resize needed
+int __width,__height;   when resized the dimensions are stored here.
+
 
 
 

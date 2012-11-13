@@ -4,14 +4,15 @@
 #include <EGL/egl.h>
 
 #include <string.h> // memset
+#include <stdbool.h>
 
 #include <vec3.h>
 #include <mat4.h>
 
 // only one platform sould be defined!
 #define XORG 1      // native mesa gles
-#define MACOS 1     // use subset of opengl 2.0 ?
-#define MSWIN 1     // angle project
+//#define MACOS 1     // use subset of opengl 2.0 ?
+//#define MSWIN 1     // angle project
 
 JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject o) {
     #ifdef XORG
@@ -22,7 +23,6 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject
 JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
   (JNIEnv *e, jclass c, jlong jnative_dpy, jlong jegl_dpy, jlong jconf,
         jint x, jint y,jint width, jint height, jboolean fullscreen) {
-    
     #ifdef XORG
     
     NativeDisplayType native_dpy = (NativeDisplayType)jnative_dpy;
@@ -57,7 +57,9 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
     attr.background_pixel = 0;
     attr.border_pixel = 0;
     attr.colormap = XCreateColormap( native_dpy, root, visInfo->visual, AllocNone);
-    attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
+    attr.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask |
+                 ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+                 
     mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
     native_win = XCreateWindow( native_dpy, root, 0, 0, width, height,
@@ -101,6 +103,99 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
     
     return native_win;
     #endif // XORG
+}
+
+// TODO when someone contributes code for other platforms
+// what to do about key values? java ifdef ???
+bool __keys[256];
+int __mouse[3]; // TODO implement java access routines for this...
+bool __resize=false;
+int __width,__height;
+
+JNIEXPORT void JNICALL Java_Jgles2_util_pumpEvents
+  (JNIEnv *e, jclass c, jlong xd,jlong w)
+{
+    #ifdef XORG
+    Display* xdisplay=(Display*)xd;
+    NativeWindowType win=(NativeWindowType)w;
+    XEvent event;
+
+
+    while (XEventsQueued(xdisplay, QueuedAfterReading)) {
+        XNextEvent(xdisplay, &event);
+        switch (event.type) {
+
+        case KeyPress:
+            __keys[event.xkey.keycode & 0xff] = true;
+            //printf("key=%i\n",event.xkey.keycode & 0xff);
+            break;
+
+        case KeyRelease:
+            __keys[event.xkey.keycode & 0xff] = false;
+            break;
+
+        case MotionNotify:
+            __mouse[0] = event.xbutton.x;
+            __mouse[1] = event.xbutton.y;
+            //printf("mouse %i,%i\n",__mouse[0],__mouse[1]);
+            break;
+
+        case ButtonPress:
+            __mouse[2] =
+                __mouse[2] | (int)pow(2, event.xbutton.button - 1);
+            break;
+        case ButtonRelease:
+            __mouse[2] =
+                __mouse[2] & (int)(255 -
+                                   pow(2,
+                                       event.xbutton.button - 1));
+            break;
+        case ConfigureNotify:
+            __resize=true;
+            Window root_return;
+            int x_return, y_return;
+            unsigned int border_width_return;
+            unsigned int depth_return;
+            XGetGeometry(xdisplay, (Drawable)win, &root_return,
+                        &x_return, &y_return,
+                        &__width, &__height,
+                        &border_width_return, &depth_return);
+
+            break;
+        }
+
+    }
+    #endif // XORG
+}
+
+JNIEXPORT jint JNICALL Java_Jgles2_util_getHeight
+  (JNIEnv *e, jclass c)
+{
+    return __height;
+}
+
+JNIEXPORT jint JNICALL Java_Jgles2_util_getWidth
+  (JNIEnv *e, jclass c)
+{
+    return __width;
+}
+
+JNIEXPORT jboolean JNICALL Java_Jgles2_util_keyDown
+  (JNIEnv *e, jclass c, jint k)
+{
+    return !__keys[k];
+}
+
+JNIEXPORT jboolean JNICALL Java_Jgles2_util_resizeRequired
+  (JNIEnv *e, jclass c)
+{
+    return __resize;
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_util_resized
+  (JNIEnv *e, jclass c)
+{
+    __resize=false;
 }
 
 //    public static native FloatBuffer kmMat4Identity(FloatBuffer mat);
