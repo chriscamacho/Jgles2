@@ -6,6 +6,7 @@ import Jgles2.BufferUtils;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
+import java.nio.ByteBuffer;
 
 public class test {
     
@@ -47,19 +48,10 @@ public class test {
             System.exit(-1);
         }
         
-        String s = EGL.eglQueryString(egl_display, EGL.EGL_VERSION);
-        System.out.println("EGL_VERSION = "+s);
-        s = EGL.eglQueryString(egl_display, EGL.EGL_VENDOR);
-        System.out.println("EGL_VENDOR = "+s);
-        s = EGL.eglQueryString(egl_display, EGL.EGL_EXTENSIONS);
-        System.out.println("EGL_EXTENSIONS = "+s);
-        s = EGL.eglQueryString(egl_display, EGL.EGL_CLIENT_APIS);
-        System.out.println("EGL_CLIENT_APIS = "+s);
-
         // val is a single integer intBuffer which is reused for various single int return values
         IntBuffer val = BufferUtils.createIntBuffer(1);
         
-        int config_size=32; // wouldn't normally check that many - just for testing!
+        int config_size=1; // wouldn't normally check that many - just for testing!
         LongBuffer configsBuffer = BufferUtils.createLongBuffer(config_size);
         
         if (!EGL.eglChooseConfig(egl_display, attribsBuffer,
@@ -67,18 +59,7 @@ public class test {
             System.out.println("failed to get an EGL config");
             System.exit(-1);            
         }
-        int num=val.get(0);
-        System.out.println("found "+num+ " configs");
-        for (int i=0;i<num;i++) {
-            long cfg = configsBuffer.get(i);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_RED_SIZE, val);           int r = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_DEPTH_SIZE, val);         int d = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_ALPHA_SIZE, val);         int a = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_CONFIG_ID, val);          int id = val.get(0);
-            EGL.eglGetConfigAttrib(egl_display, cfg , EGL.EGL_NATIVE_RENDERABLE, val);  int nr = val.get(0);
-            System.out.println("config #"+i+" ID"+id+" RED"+r+" DEPTH"+d+" ALPHA"+a+" NR"+nr);
-        }
-        
+
         long config=configsBuffer.get(0); 
         
         long native_win = util.make_native_window(native_display, egl_display, config,
@@ -98,14 +79,7 @@ public class test {
         if (egl_surface == 0) {
             System.out.println("failed to create a windowed surface");
             System.exit(-1);
-        }
-        
-        EGL.eglQuerySurface(egl_display, egl_surface, EGL.EGL_WIDTH, val);
-        System.out.println("surface width "+val.get(0));
-        EGL.eglQuerySurface(egl_display, egl_surface, EGL.EGL_HEIGHT, val);
-        System.out.println("surface height "+val.get(0));
-        EGL.eglGetConfigAttrib(egl_display, config, EGL.EGL_SURFACE_TYPE, val);
-        System.out.println("window bit "+(val.get(0) & EGL.EGL_WINDOW_BIT));        
+        }      
         
         if (!EGL.eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context)) {
             System.out.println("eglMakeCurrent failed");
@@ -113,26 +87,29 @@ public class test {
             System.exit(-1);
         }
         
-        System.out.println("GL_RENDERER   = " + GLES2.glGetString(GLES2.GL_RENDERER));
-        System.out.println("GL_VERSION    = " + GLES2.glGetString(GLES2.GL_VERSION));
-        System.out.println("GL_VENDOR     = " + GLES2.glGetString(GLES2.GL_VENDOR));
-        
         GLES2.glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
         
         String fragShaderText =
+            "uniform sampler2D u_texture;\n"+
             "varying vec4 v_color;\n"+
+            "varying vec2 v_frag_uv; \n"+
             "void main() {\n"+
-            "   gl_FragColor = v_color;\n"+
+            "	vec4 baseColour = texture2D(u_texture,v_frag_uv);\n"+
+            "   gl_FragColor = v_color * baseColour;\n"+
+            //"   gl_FragColor = baseColour;\n"+
             "}\n";
 
         String vertShaderText =
             "uniform mat4 modelviewProjection;\n"+
             "attribute vec4 pos;\n"+
+            "attribute vec2 uv_attrib;\n"+
             "attribute vec4 color;\n"+
             "varying vec4 v_color;\n"+
+            "varying vec2 v_frag_uv;\n"+
             "void main() {\n"+
             "   gl_Position = modelviewProjection * pos;\n"+
             "   v_color = color;\n"+
+            "	v_frag_uv = uv_attrib;\n"+
             "}\n";
         
         int fragShader, vertShader, program;
@@ -171,23 +148,28 @@ public class test {
 
         GLES2.glUseProgram(program);
 
-        int attr_pos=0,attr_color=1,u_matrix;
+        int attr_pos=0,attr_color=1,attr_uv=2,u_matrix,u_texture;
         
         GLES2.glBindAttribLocation(program, attr_pos, "pos");
         GLES2.glBindAttribLocation(program, attr_color, "color");
+        GLES2.glBindAttribLocation(program, attr_uv, "uv_attrib");
         GLES2.glLinkProgram(program);  /* needed to put attribs into effect */
 
         u_matrix = GLES2.glGetUniformLocation(program, "modelviewProjection");
-        System.out.println("Uniform modelviewProjection at " + u_matrix);
-        System.out.println("Attrib pos at " + attr_pos);
-        System.out.println("Attrib color at " + attr_color);
-
+        u_texture = GLES2.glGetUniformLocation(program, "u_texture");
+        
         GLES2.glViewport(0, 0, winWidth, winHeight);
 
         float verts[] = {
             -1, -1,
              1, -1,
              0,  1
+        };
+        
+        float uvs[] = {
+            0.0f,0.0f,
+            0.0f,2.0f,
+            2.0f,2.0f
         };
         
         float colours[] = {
@@ -200,6 +182,8 @@ public class test {
         vertsBuffer.put(verts);
         FloatBuffer coloursBuffer = BufferUtils.createFloatBuffer(colours.length);
         coloursBuffer.put(colours);
+        FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(uvs.length);
+        uvBuffer.put(uvs);
         
         // kmMat4 struct is 16 floats (love the KISS principle)
         FloatBuffer view = BufferUtils.createFloatBuffer(16);
@@ -228,16 +212,43 @@ public class test {
         FloatBuffer model = BufferUtils.createFloatBuffer(16);
         FloatBuffer mvp = BufferUtils.createFloatBuffer(16);
         util.kmMat4Identity(mvp);
+
+
+        
+        int texData[] = {
+0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0xff,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0xff,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0xff,0xff, 
+0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 
+        };
+        
+        ByteBuffer textureBuffer = BufferUtils.createByteBuffer(texData.length);
+        for (int d:texData) textureBuffer.put((byte)d);
+
+        GLES2.glActiveTexture(GLES2.GL_TEXTURE0);
+
+        int texture;
+        GLES2.glGenTextures(1, val);
+        texture=val.get(0);
+        GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, texture);
+        GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MIN_FILTER, GLES2.GL_LINEAR);
+        GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MAG_FILTER, GLES2.GL_LINEAR);
+        GLES2.glTexImage2D(GLES2.GL_TEXTURE_2D, 0, GLES2.GL_RGB, 8, 8, 0, GLES2.GL_RGB,
+                     GLES2.GL_UNSIGNED_BYTE, textureBuffer);
         
         float frame=0;
         while( util.keyDown(9) ) {
             frame++;
             util.kmMat4Identity(model);
 
-            util.kmMat4Translation(model,0,0,-5+((float)Math.sin(frame/20f)*2f));            
-            util.kmMat4RotationPitchYawRoll(model,  frame/10f,
-                                                    frame/20f,
-                                                    frame/30f);
+            util.kmMat4Translation(model,0,0,-5+((float)Math.sin(frame/40f)*2f));                       
+            util.kmMat4RotationPitchYawRoll(model,  frame/30f,
+                                                    frame/40f,
+                                                    frame/50f);
             util.kmMat4Multiply(mvp,vp,model);
 
             GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
@@ -246,13 +257,16 @@ public class test {
             
             GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
             GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
+            GLES2.glVertexAttribPointer(attr_uv, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, uvBuffer);
             GLES2.glEnableVertexAttribArray(attr_pos);
             GLES2.glEnableVertexAttribArray(attr_color);
+            GLES2.glEnableVertexAttribArray(attr_uv);
 
             GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
 
             GLES2.glDisableVertexAttribArray(attr_pos);
             GLES2.glDisableVertexAttribArray(attr_color);
+            GLES2.glDisableVertexAttribArray(attr_uv);
                     
             EGL.eglSwapBuffers(egl_display, egl_surface);    
 
@@ -272,9 +286,12 @@ public class test {
                                         (float)w / h, 0.1f, 10); 
                 util.kmMat4Identity(vp);
                 util.kmMat4Multiply(vp,view,projection);                
-                util.resized();
             }
         }
+        
+        EGL.eglDestroySurface( egl_display, egl_surface);
+        EGL.eglDestroyContext( egl_display, egl_context);
+        util.closeWindow(native_display,native_win);
 
     }
 

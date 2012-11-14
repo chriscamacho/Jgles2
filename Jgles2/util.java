@@ -13,9 +13,9 @@ public class util {
     public static native long make_native_window(long native_display,
                             long egl_display, long config, int x, int y, 
                             int width, int height, boolean fullscreen);
+    public static native void closeWindow(long disp,long win);
     public static native void pumpEvents(long xDisplay,long win);
     public static native boolean resizeRequired();
-    public static native void resized();
     public static native int getWidth();
     public static native int getHeight();
     public static native boolean keyDown(int k);

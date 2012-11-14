@@ -1,6 +1,45 @@
 #include "Jgles2_GLES2.h"
 #include <GLES2/gl2.h>
 
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glActiveTexture
+  (JNIEnv *e, jclass c, jint t)
+{
+    glActiveTexture(t);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGenTextures
+  (JNIEnv *e, jclass c, jint num, jobject jnames)
+{
+    int* names = (int*)((*e)->GetDirectBufferAddress(e, jnames));
+    glGenTextures(num,names);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBindTexture
+  (JNIEnv *e, jclass c, jint target, jint texture)
+{
+    glBindTexture(target,texture);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glTexParameterf
+  (JNIEnv *e, jclass c, jint target, jint pname, jfloat param)
+{
+    glTexParameterf(target,pname,param);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glTexParameteri
+  (JNIEnv *e, jclass c, jint target, jint pname, jint param)
+{
+    glTexParameteri(target,pname,param);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glTexImage2D
+  (JNIEnv *e, jclass c, jint target, jint level, jint internalformat, 
+        jint width, jint height, jint border, jint format, jint type, jobject jpixels)
+{
+    void* pixels = (void*)((*e)->GetDirectBufferAddress(e, jpixels));
+    glTexImage2D(target,level,internalformat,width,height,border,format,type,pixels);
+}
+
 JNIEXPORT jstring JNICALL Java_Jgles2_GLES2_glGetString
   (JNIEnv *e, jclass c, jint attrib)
 {

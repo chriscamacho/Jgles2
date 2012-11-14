@@ -97,3 +97,15 @@ JNIEXPORT void JNICALL Java_Jgles2_EGL_eglSwapBuffers
 {
     eglSwapBuffers((EGLDisplay)disp,(EGLSurface)surf);
 }
+
+JNIEXPORT jboolean JNICALL Java_Jgles2_EGL_eglDestroySurface
+  (JNIEnv *e, jclass c, jlong d, jlong s)
+{
+    eglDestroySurface((EGLDisplay)d, (EGLSurface)s);
+}  
+  
+JNIEXPORT jboolean JNICALL Java_Jgles2_EGL_eglDestroyContext
+  (JNIEnv *e, jclass c, jlong d, jlong ctx)
+{
+    eglDestroyContext((EGLDisplay)d, (EGLContext)ctx);  
+}

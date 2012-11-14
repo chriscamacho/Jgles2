@@ -105,6 +105,12 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
     #endif // XORG
 }
 
+JNIEXPORT void JNICALL Java_Jgles2_util_closeWindow
+  (JNIEnv *e, jclass c, jlong d, jlong w) 
+{
+      XDestroyWindow((Display*)d, (NativeWindowType)w);
+}
+
 // TODO when someone contributes code for other platforms
 // what to do about key values? java ifdef ???
 bool __keys[256];
@@ -189,14 +195,12 @@ JNIEXPORT jboolean JNICALL Java_Jgles2_util_keyDown
 JNIEXPORT jboolean JNICALL Java_Jgles2_util_resizeRequired
   (JNIEnv *e, jclass c)
 {
-    return __resize;
+    bool r = __resize;
+    __resize = false;
+    return r;
 }
 
-JNIEXPORT void JNICALL Java_Jgles2_util_resized
-  (JNIEnv *e, jclass c)
-{
-    __resize=false;
-}
+
 
 //    public static native FloatBuffer kmMat4Identity(FloatBuffer mat);
 JNIEXPORT jobject JNICALL Java_Jgles2_util_kmMat4Identity

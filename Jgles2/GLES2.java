@@ -3,6 +3,8 @@ package Jgles2;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.nio.LongBuffer;
+import java.nio.ByteBuffer;
 
 public class GLES2 {
     
@@ -64,20 +66,125 @@ public class GLES2 {
     public static final int GL_TRIANGLES        =    0x0004;
     public static final int GL_TRIANGLE_STRIP   =    0x0005;
     public static final int GL_TRIANGLE_FAN     =    0x0006;   
+
+
+
+/* TextureMagFilter */
+    public static final int GL_NEAREST                        =   0x2600;
+    public static final int GL_LINEAR                         =   0x2601;
+
+/* TextureMinFilter */
+/*      GL_NEAREST */
+/*      GL_LINEAR */
+    public static final int GL_NEAREST_MIPMAP_NEAREST         =   0x2700;
+    public static final int GL_LINEAR_MIPMAP_NEAREST          =   0x2701;
+    public static final int GL_NEAREST_MIPMAP_LINEAR          =   0x2702;
+    public static final int GL_LINEAR_MIPMAP_LINEAR           =   0x2703;
+
+/* TextureParameterName */
+    public static final int GL_TEXTURE_MAG_FILTER             =   0x2800;
+    public static final int GL_TEXTURE_MIN_FILTER             =   0x2801;
+    public static final int GL_TEXTURE_WRAP_S                 =   0x2802;
+    public static final int GL_TEXTURE_WRAP_T                 =   0x2803;
+
+/* TextureTarget */
+/*      GL_TEXTURE_2D */
+    public static final int GL_TEXTURE                        =   0x1702;
+
+    public static final int GL_TEXTURE_CUBE_MAP               =   0x8513;
+    public static final int GL_TEXTURE_BINDING_CUBE_MAP       =   0x8514;
+    public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_X    =   0x8515;
+    public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_X    =   0x8516;
+    public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Y    =   0x8517;
+    public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y    =   0x8518;
+    public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Z    =   0x8519;
+    public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z    =   0x851A;
+    public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE      =   0x851C;
+
+/* TextureUnit */
+    public static final int GL_TEXTURE0                       =   0x84C0;
+    public static final int GL_TEXTURE1                       =   0x84C1;
+    public static final int GL_TEXTURE2                       =   0x84C2;
+    public static final int GL_TEXTURE3                       =   0x84C3;
+    public static final int GL_TEXTURE4                       =   0x84C4;
+    public static final int GL_TEXTURE5                       =   0x84C5;
+    public static final int GL_TEXTURE6                       =   0x84C6;
+    public static final int GL_TEXTURE7                       =   0x84C7;
+    public static final int GL_TEXTURE8                       =   0x84C8;
+    public static final int GL_TEXTURE9                       =   0x84C9;
+    public static final int GL_TEXTURE10                      =   0x84CA;
+    public static final int GL_TEXTURE11                      =   0x84CB;
+    public static final int GL_TEXTURE12                      =   0x84CC;
+    public static final int GL_TEXTURE13                      =   0x84CD;
+    public static final int GL_TEXTURE14                      =   0x84CE;
+    public static final int GL_TEXTURE15                      =   0x84CF;
+    public static final int GL_TEXTURE16                      =   0x84D0;
+    public static final int GL_TEXTURE17                      =   0x84D1;
+    public static final int GL_TEXTURE18                      =   0x84D2;
+    public static final int GL_TEXTURE19                      =   0x84D3;
+    public static final int GL_TEXTURE20                      =   0x84D4;
+    public static final int GL_TEXTURE21                      =   0x84D5;
+    public static final int GL_TEXTURE22                      =   0x84D6;
+    public static final int GL_TEXTURE23                      =   0x84D7;
+    public static final int GL_TEXTURE24                      =   0x84D8;
+    public static final int GL_TEXTURE25                      =   0x84D9;
+    public static final int GL_TEXTURE26                      =   0x84DA;
+    public static final int GL_TEXTURE27                      =   0x84DB;
+    public static final int GL_TEXTURE28                      =   0x84DC;
+    public static final int GL_TEXTURE29                      =   0x84DD;
+    public static final int GL_TEXTURE30                      =   0x84DE;
+    public static final int GL_TEXTURE31                      =   0x84DF;
+    public static final int GL_ACTIVE_TEXTURE                 =   0x84E0;
+
+/* TextureWrapMode */
+    public static final int GL_REPEAT                         =   0x2901;
+    public static final int GL_CLAMP_TO_EDGE                  =   0x812F;
+    public static final int GL_MIRRORED_REPEAT                =   0x8370;
+
+/* PixelFormat */
+    public static final int GL_DEPTH_COMPONENT       =         0x1902;
+    public static final int GL_ALPHA                 =         0x1906;
+    public static final int GL_RGB                   =         0x1907;
+    public static final int GL_RGBA                  =         0x1908;
+    public static final int GL_LUMINANCE             =         0x1909;
+    public static final int GL_LUMINANCE_ALPHA       =         0x190A;
+
+/* EnableCap */
+    public static final int GL_TEXTURE_2D                 =    0x0DE1;
+    public static final int GL_CULL_FACE                  =    0x0B44;
+    public static final int GL_BLEND                      =    0x0BE2;
+    public static final int GL_DITHER                     =    0x0BD0;
+    public static final int GL_STENCIL_TEST               =    0x0B90;
+    public static final int GL_DEPTH_TEST                 =    0x0B71;
+    public static final int GL_SCISSOR_TEST               =    0x0C11;
+    public static final int GL_POLYGON_OFFSET_FILL        =    0x8037;
+    public static final int GL_SAMPLE_ALPHA_TO_COVERAGE   =    0x809E;
+    public static final int GL_SAMPLE_COVERAGE            =    0x80A0;
        
+
+    public static native void glActiveTexture(int texture);
+    public static native void glAttachShader(int program, int fragShader);
     
+    public static native void glGenTextures(int num, IntBuffer names);
+    public static native void glBindTexture(int type, int texname);
+
+    public static native void glTexParameterf(int target,int pname,float param);
+    public static native void glTexParameteri(int target,int pname,int param);         
+    public static native void glTexImage2D(int target,int level,int internalformat,
+                                    int width,int height,int border,int format,
+                                    int type,ByteBuffer data) ;
+
     
     public static native String glGetString(int attrib); 
     public static native void glClearColor(float r, float g, float b, float a);
     public static native int glCreateShader(int type);
     
     // differs as only accepts 1 shader
-    public static native void glShaderSource(int fragShader, String fragShaderText);
+    public static native void glShaderSource(int shader, String shaderText);
     
     public static native void glCompileShader(int shader);
     public static native void glGetShaderiv(int shader, int attrib, IntBuffer val);
     public static native int glCreateProgram();
-    public static native void glAttachShader(int program, int fragShader);
     public static native void glLinkProgram(int program);
     public static native void glGetProgramiv(int prog, int attrib, IntBuffer val);
     public static native String glGetProgramInfoLog(int program);
