@@ -87,7 +87,7 @@ public class test {
             System.exit(-1);
         }
         
-        GLES2.glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
+
         
         String fragShaderText =
             "uniform sampler2D u_texture;\n"+
@@ -239,20 +239,72 @@ public class test {
         GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MAG_FILTER, GLES2.GL_LINEAR);
         GLES2.glTexImage2D(GLES2.GL_TEXTURE_2D, 0, GLES2.GL_RGB, 8, 8, 0, GLES2.GL_RGB,
                      GLES2.GL_UNSIGNED_BYTE, textureBuffer);
+                     
+        // set up for RTT
+            ByteBuffer rttBB = BufferUtils.createByteBuffer(128*128*3);
+            GLES2.glGenFramebuffers(1, val);    int rttframebuff = val.get(0);
+            GLES2.glGenTextures(1, val);        int rtt = val.get(0);
+            GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, rtt);
+            GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MIN_FILTER, GLES2.GL_LINEAR);
+            GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MAG_FILTER, GLES2.GL_LINEAR);
+            GLES2.glTexImage2D(GLES2.GL_TEXTURE_2D, 0, GLES2.GL_RGB, 128, 128, 0, GLES2.GL_RGB,
+                    GLES2.GL_UNSIGNED_BYTE, rttBB);
+             
+            GLES2.glGenRenderbuffers(1, val);    int rttrendbuff = val.get(0);
+            GLES2.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, rttrendbuff);
+            GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, rttframebuff);
+            GLES2.glFramebufferTexture2D(GLES2.GL_FRAMEBUFFER,GLES2.GL_COLOR_ATTACHMENT0,GLES2.GL_TEXTURE_2D,rtt,0);            
+
+            GLES2.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, GLES2.GL_DEPTH_COMPONENT16, 64, 64);
+
+
+        
         
         float frame=0;
         while( util.keyDown(9) ) {
             frame++;
+
+
+                // render to texture 
+                GLES2.glClearColor(0.4f, 0.8f, 0.2f, 0.0f);
+                GLES2.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, rttrendbuff);
+                GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, rttframebuff);
+                GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, texture);             
+                GLES2.glViewport(0, 0, 128,128);
+                util.kmMat4Identity(mvp);
+                util.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
+                GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
+                GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT|GLES2.GL_DEPTH_BUFFER_BIT);
+
+                GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
+                GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
+                GLES2.glVertexAttribPointer(attr_uv, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, uvBuffer);
+                GLES2.glEnableVertexAttribArray(attr_pos);
+                GLES2.glEnableVertexAttribArray(attr_color);
+                GLES2.glEnableVertexAttribArray(attr_uv);
+
+                GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
+
+                GLES2.glDisableVertexAttribArray(attr_pos);
+                GLES2.glDisableVertexAttribArray(attr_color);
+                GLES2.glDisableVertexAttribArray(attr_uv);
+
+            // render to the backbuffer
+            GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, rtt);
+            GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, 0);
+            GLES2.glBindRenderbuffer(GLES2.GL_FRAMEBUFFER, 0);
+            GLES2.glViewport(0, 0, util.getWidth(), util.getHeight());
+            
             util.kmMat4Identity(model);
 
-            util.kmMat4Translation(model,0,0,-5+((float)Math.sin(frame/40f)*2f));                       
+            util.kmMat4Translation(model,0,0,-4+((float)Math.sin(frame/30f)*2f));                       
             util.kmMat4RotationPitchYawRoll(model,  frame/30f,
                                                     frame/40f,
                                                     frame/50f);
             util.kmMat4Multiply(mvp,vp,model);
-
             GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
 
+            GLES2.glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
             GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
             
             GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
@@ -267,7 +319,8 @@ public class test {
             GLES2.glDisableVertexAttribArray(attr_pos);
             GLES2.glDisableVertexAttribArray(attr_color);
             GLES2.glDisableVertexAttribArray(attr_uv);
-                    
+            
+            // flip
             EGL.eglSwapBuffers(egl_display, egl_surface);    
 
             try {

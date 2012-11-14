@@ -67,8 +67,6 @@ public class GLES2 {
     public static final int GL_TRIANGLE_STRIP   =    0x0005;
     public static final int GL_TRIANGLE_FAN     =    0x0006;   
 
-
-
 /* TextureMagFilter */
     public static final int GL_NEAREST                        =   0x2600;
     public static final int GL_LINEAR                         =   0x2601;
@@ -161,6 +159,64 @@ public class GLES2 {
     public static final int GL_SAMPLE_ALPHA_TO_COVERAGE   =    0x809E;
     public static final int GL_SAMPLE_COVERAGE            =    0x80A0;
        
+/* Framebuffer Object. */
+    public static final int GL_FRAMEBUFFER                    =   0x8D40;
+    public static final int GL_RENDERBUFFER                   =   0x8D41;
+
+    public static final int GL_RGBA4                          =   0x8056;
+    public static final int GL_RGB5_A1                        =   0x8057;
+    public static final int GL_RGB565                         =   0x8D62;
+    public static final int GL_DEPTH_COMPONENT16              =   0x81A5;
+    public static final int GL_STENCIL_INDEX                  =   0x1901;
+    public static final int GL_STENCIL_INDEX8                 =   0x8D48;
+
+    public static final int GL_RENDERBUFFER_WIDTH             =   0x8D42;
+    public static final int GL_RENDERBUFFER_HEIGHT            =   0x8D43;
+    public static final int GL_RENDERBUFFER_INTERNAL_FORMAT   =   0x8D44;
+    public static final int GL_RENDERBUFFER_RED_SIZE          =   0x8D50;
+    public static final int GL_RENDERBUFFER_GREEN_SIZE        =   0x8D51;
+    public static final int GL_RENDERBUFFER_BLUE_SIZE         =   0x8D52;
+    public static final int GL_RENDERBUFFER_ALPHA_SIZE        =   0x8D53;
+    public static final int GL_RENDERBUFFER_DEPTH_SIZE        =   0x8D54;
+    public static final int GL_RENDERBUFFER_STENCIL_SIZE      =   0x8D55;
+
+    public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE           =   0x8CD0;
+    public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME           =   0x8CD1;
+    public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL         =   0x8CD2;
+    public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE =   0x8CD3;
+
+    public static final int GL_COLOR_ATTACHMENT0              =   0x8CE0;
+    public static final int GL_DEPTH_ATTACHMENT               =   0x8D00;
+    public static final int GL_STENCIL_ATTACHMENT             =   0x8D20;
+
+    public static final int GL_NONE                           =   0;
+
+    public static final int GL_FRAMEBUFFER_COMPLETE                      =   0x8CD5;
+    public static final int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT         =   0x8CD6;
+    public static final int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT =   0x8CD7;
+    public static final int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS         =   0x8CD9;
+    public static final int GL_FRAMEBUFFER_UNSUPPORTED                   =   0x8CDD;
+
+    public static final int GL_FRAMEBUFFER_BINDING            =   0x8CA6;
+    public static final int GL_RENDERBUFFER_BINDING           =   0x8CA7;
+    public static final int GL_MAX_RENDERBUFFER_SIZE          =   0x84E8;
+
+    public static final int GL_INVALID_FRAMEBUFFER_OPERATION  =   0x0506;
+
+
+
+
+
+
+
+
+
+    public static native void glBindFramebuffer(int target, int framebuffer);
+    public static native void glGenFramebuffers(int n, IntBuffer framebuffers);
+    public static native void glRenderbufferStorage(int target,int internalformat,int width,int height);
+    public static native void glGenRenderbuffers(int n, IntBuffer renderbuffers);
+    public static native void glBindRenderbuffer(int target, int renderbuffer);
+    public static native void glFramebufferTexture2D(int target,int attachment,int textarget,int texture,int level);
 
     public static native void glActiveTexture(int texture);
     public static native void glAttachShader(int program, int fragShader);

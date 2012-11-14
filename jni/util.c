@@ -14,6 +14,17 @@
 //#define MACOS 1     // use subset of opengl 2.0 ?
 //#define MSWIN 1     // angle project
 
+
+
+// TODO when someone contributes code for other platforms
+// what to do about key values? java ifdef ???
+bool __keys[256];
+int __mouse[3]; // TODO implement java access routines for this...
+bool __resize=false;
+int __width,__height;
+
+
+
 JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject o) {
     #ifdef XORG
     return (unsigned long)XOpenDisplay(NULL);
@@ -23,6 +34,10 @@ JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject
 JNIEXPORT jlong JNICALL Java_Jgles2_util_make_1native_1window
   (JNIEnv *e, jclass c, jlong jnative_dpy, jlong jegl_dpy, jlong jconf,
         jint x, jint y,jint width, jint height, jboolean fullscreen) {
+    
+    __width = width;    // needed on all platforms ensures get w/h
+    __height = height;  // works even when screen hasn't been resized...
+    
     #ifdef XORG
     
     NativeDisplayType native_dpy = (NativeDisplayType)jnative_dpy;
@@ -111,12 +126,6 @@ JNIEXPORT void JNICALL Java_Jgles2_util_closeWindow
       XDestroyWindow((Display*)d, (NativeWindowType)w);
 }
 
-// TODO when someone contributes code for other platforms
-// what to do about key values? java ifdef ???
-bool __keys[256];
-int __mouse[3]; // TODO implement java access routines for this...
-bool __resize=false;
-int __width,__height;
 
 JNIEXPORT void JNICALL Java_Jgles2_util_pumpEvents
   (JNIEnv *e, jclass c, jlong xd,jlong w)

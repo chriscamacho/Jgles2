@@ -1,6 +1,45 @@
 #include "Jgles2_GLES2.h"
 #include <GLES2/gl2.h>
 
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBindFramebuffer
+  (JNIEnv *e, jclass c, jint target, jint framebuffer)
+{
+    glBindFramebuffer(target,framebuffer);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGenFramebuffers
+  (JNIEnv *e, jclass c, jint n, jobject jbuffs)
+{
+    void* buffers = (void*)((*e)->GetDirectBufferAddress(e, jbuffs));
+    glGenFramebuffers(n,buffers);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glRenderbufferStorage
+  (JNIEnv *e, jclass c, jint target, jint intFormat, jint width, jint height)
+{
+    glRenderbufferStorage(target,intFormat,width,height);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGenRenderbuffers
+  (JNIEnv *e, jclass c, jint n, jobject jrbuffs)
+{
+    void* rbuffs = (void*)((*e)->GetDirectBufferAddress(e, jrbuffs));
+    glGenRenderbuffers(n,rbuffs);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBindRenderbuffer
+  (JNIEnv *e, jclass c, jint target, jint renderbuffer)
+{
+    glBindRenderbuffer(target,renderbuffer);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glFramebufferTexture2D(JNIEnv *e, jclass c, jint target,
+        jint attachment, jint textarget, jint texture, jint level)
+{
+    glFramebufferTexture2D(target,attachment,textarget,texture,level);
+}
+  
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glActiveTexture
   (JNIEnv *e, jclass c, jint t)
 {
