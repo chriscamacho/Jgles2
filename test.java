@@ -1,6 +1,6 @@
 import Jgles2.util;
 import Jgles2.EGL;
-import Jgles2.GLES2;
+import static Jgles2.GLES2.*;
 import Jgles2.BufferUtils;
 
 import java.nio.IntBuffer;
@@ -14,6 +14,7 @@ public class test {
             
     }
     
+    // initial window size
     static final int winWidth = 640;
     static final int winHeight = 480;
     
@@ -33,7 +34,7 @@ public class test {
             EGL.EGL_CONTEXT_CLIENT_VERSION, 2,
             EGL.EGL_NONE // end of list
         };
-        
+        // buffers for EGL attributs 
         IntBuffer attribsBuffer = BufferUtils.createIntBuffer(attribs.length);
         attribsBuffer.put(attribs);
         
@@ -61,7 +62,9 @@ public class test {
         }
 
         long config=configsBuffer.get(0); 
-        
+        // last 5 parameters of make_native_window are
+        // coordinates of top left corner of window, window width and height
+        // and finally a flag for fullscreen
         long native_win = util.make_native_window(native_display, egl_display, config,
                     0, 0, winWidth, winHeight, false);
                     
@@ -70,10 +73,6 @@ public class test {
             System.out.println("failed to get an EGL context");
             System.exit(-1);
         }
-        
-        // test query context
-        EGL.eglQueryContext(egl_display, egl_context, EGL.EGL_CONTEXT_CLIENT_VERSION, val);
-        System.out.println("context client version "+val.get(0));
         
         long egl_surface = EGL.eglCreateWindowSurface(egl_display, config, native_win, null);
         if (egl_surface == 0) {
@@ -88,7 +87,8 @@ public class test {
         }
         
 
-        
+        // the shader is shared by both renderings
+        // combines vertex colour with a texture
         String fragShaderText =
             "uniform sampler2D u_texture;\n"+
             "varying vec4 v_color;\n"+
@@ -96,7 +96,6 @@ public class test {
             "void main() {\n"+
             "	vec4 baseColour = texture2D(u_texture,v_frag_uv);\n"+
             "   gl_FragColor = v_color * baseColour;\n"+
-            //"   gl_FragColor = baseColour;\n"+
             "}\n";
 
         String vertShaderText =
@@ -115,51 +114,52 @@ public class test {
         int fragShader, vertShader, program;
         int stat;
         
-        fragShader = GLES2.glCreateShader(GLES2.GL_FRAGMENT_SHADER);
-        GLES2.glShaderSource(fragShader, fragShaderText);
-        GLES2.glCompileShader(fragShader);
-        GLES2.glGetShaderiv(fragShader, GLES2.GL_COMPILE_STATUS, val);
+        fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragShader, fragShaderText);
+        glCompileShader(fragShader);
+        glGetShaderiv(fragShader, GL_COMPILE_STATUS, val);
         if (val.get(0)==0) {
             System.out.println("Error: fragment shader did not compile!\n");
-            System.out.println("Shader log:\n"+GLES2.glGetShaderInfoLog(fragShader));
+            System.out.println("Shader log:\n"+glGetShaderInfoLog(fragShader));
             System.exit(-1);
         }
         
-        vertShader = GLES2.glCreateShader(GLES2.GL_VERTEX_SHADER);
-        GLES2.glShaderSource(vertShader, vertShaderText);
-        GLES2.glCompileShader(vertShader);
-        GLES2.glGetShaderiv(vertShader, GLES2.GL_COMPILE_STATUS, val);
+        vertShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertShader, vertShaderText);
+        glCompileShader(vertShader);
+        glGetShaderiv(vertShader, GL_COMPILE_STATUS, val);
         if (val.get(0)==0) {
             System.out.println("Error: vertex shader did not compile!\n");
-            System.out.println("Shader log:\n"+GLES2.glGetShaderInfoLog(vertShader));
+            System.out.println("Shader log:\n"+glGetShaderInfoLog(vertShader));
             System.exit(-1);
         }       
         
-        program = GLES2.glCreateProgram();
-        GLES2.glAttachShader(program, fragShader);
-        GLES2.glAttachShader(program, vertShader);
-        GLES2.glLinkProgram(program);
+        program = glCreateProgram();
+        glAttachShader(program, fragShader);
+        glAttachShader(program, vertShader);
+        glLinkProgram(program);
         
-        GLES2.glGetProgramiv(program, GLES2.GL_LINK_STATUS, val);
+        glGetProgramiv(program, GL_LINK_STATUS, val);
         if (val.get(0)==0) {
-            System.out.println("Shader log:\n"+GLES2.glGetProgramInfoLog(program));
+            System.out.println("Shader log:\n"+glGetProgramInfoLog(program));
             System.exit(-1);
         }
 
-        GLES2.glUseProgram(program);
+        glUseProgram(program);
 
         int attr_pos=0,attr_color=1,attr_uv=2,u_matrix,u_texture;
         
-        GLES2.glBindAttribLocation(program, attr_pos, "pos");
-        GLES2.glBindAttribLocation(program, attr_color, "color");
-        GLES2.glBindAttribLocation(program, attr_uv, "uv_attrib");
-        GLES2.glLinkProgram(program);  /* needed to put attribs into effect */
+        glBindAttribLocation(program, attr_pos, "pos");
+        glBindAttribLocation(program, attr_color, "color");
+        glBindAttribLocation(program, attr_uv, "uv_attrib");
+        glLinkProgram(program);  /* needed to put attribs into effect */
 
-        u_matrix = GLES2.glGetUniformLocation(program, "modelviewProjection");
-        u_texture = GLES2.glGetUniformLocation(program, "u_texture");
+        u_matrix = glGetUniformLocation(program, "modelviewProjection");
+        u_texture = glGetUniformLocation(program, "u_texture");
         
-        GLES2.glViewport(0, 0, winWidth, winHeight);
 
+        // its better to load these values directly from a file into
+        // a buffer, so theres no duplicates
         float verts[] = {
             -1, -1,
              1, -1,
@@ -205,16 +205,20 @@ public class test {
         util.kmMat4PerspectiveProjection(projection, 45f,
                                 (float)winWidth / winWidth, 0.1f, 10);
 
+        // combine view and projection matrix as we dont need to
+        // calculate them each frame unless something changes
         FloatBuffer vp = BufferUtils.createFloatBuffer(16);
         util.kmMat4Identity(vp);
-        util.kmMat4Multiply(vp,view,projection);
+        util.kmMat4Multiply(vp,view,projection);  
         
+        // model matrix is the position/orientation for an individual
+        // model, the mvp matrix is the final matrix used by the shader
         FloatBuffer model = BufferUtils.createFloatBuffer(16);
         FloatBuffer mvp = BufferUtils.createFloatBuffer(16);
-        util.kmMat4Identity(mvp);
 
 
-        
+
+        // normally you'd load this directly into a buffer
         int texData[] = {
 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 0xff,0xff,0xff, 
 0xff,0xff,0xff, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0xff,0xff, 
@@ -229,112 +233,109 @@ public class test {
         ByteBuffer textureBuffer = BufferUtils.createByteBuffer(texData.length);
         for (int d:texData) textureBuffer.put((byte)d);
 
-        GLES2.glActiveTexture(GLES2.GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
 
+        // this texture is the image on the triangle thats rendered onto
+        // the texture thats used to render the triangle on the screen
         int texture;
-        GLES2.glGenTextures(1, val);
+        glGenTextures(1, val);
         texture=val.get(0);
-        GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, texture);
-        GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MIN_FILTER, GLES2.GL_LINEAR);
-        GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MAG_FILTER, GLES2.GL_LINEAR);
-        GLES2.glTexImage2D(GLES2.GL_TEXTURE_2D, 0, GLES2.GL_RGB, 8, 8, 0, GLES2.GL_RGB,
-                     GLES2.GL_UNSIGNED_BYTE, textureBuffer);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGB,
+                     GL_UNSIGNED_BYTE, textureBuffer);
                      
         // set up for RTT
-            ByteBuffer rttBB = BufferUtils.createByteBuffer(128*128*3);
-            GLES2.glGenFramebuffers(1, val);    int rttframebuff = val.get(0);
-            GLES2.glGenTextures(1, val);        int rtt = val.get(0);
-            GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, rtt);
-            GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MIN_FILTER, GLES2.GL_LINEAR);
-            GLES2.glTexParameteri(GLES2.GL_TEXTURE_2D, GLES2.GL_TEXTURE_MAG_FILTER, GLES2.GL_LINEAR);
-            GLES2.glTexImage2D(GLES2.GL_TEXTURE_2D, 0, GLES2.GL_RGB, 128, 128, 0, GLES2.GL_RGB,
-                    GLES2.GL_UNSIGNED_BYTE, rttBB);
-             
-            GLES2.glGenRenderbuffers(1, val);    int rttrendbuff = val.get(0);
-            GLES2.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, rttrendbuff);
-            GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, rttframebuff);
-            GLES2.glFramebufferTexture2D(GLES2.GL_FRAMEBUFFER,GLES2.GL_COLOR_ATTACHMENT0,GLES2.GL_TEXTURE_2D,rtt,0);            
+        ByteBuffer rttBB = BufferUtils.createByteBuffer(128*128*3);
+        glGenFramebuffers(1, val);    int rttframebuff = val.get(0);
+        glGenTextures(1, val);        int rtt = val.get(0);
+        glBindTexture(GL_TEXTURE_2D, rtt);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 128, 128, 0, GL_RGB,
+                GL_UNSIGNED_BYTE, rttBB);
+         
+        glGenRenderbuffers(1, val);    int rttrendbuff = val.get(0);
+        glBindRenderbuffer(GL_RENDERBUFFER, rttrendbuff);
+        glBindFramebuffer(GL_FRAMEBUFFER, rttframebuff);
+        glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,rtt,0);            
 
-            GLES2.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, GLES2.GL_DEPTH_COMPONENT16, 64, 64);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 64, 64);
 
-
-        
+        EGL.eglSwapInterval(egl_display,1);
         
         float frame=0;
         while( util.keyDown(9) ) {
             frame++;
 
+            // render to texture 
+            glClearColor(0.4f, 0.8f, 0.2f, 0.0f);
+            glBindRenderbuffer(GL_RENDERBUFFER, rttrendbuff);
+            glBindFramebuffer(GL_FRAMEBUFFER, rttframebuff);
+            glBindTexture(GL_TEXTURE_2D, texture);             
+            glViewport(0, 0, 128,128);
+            util.kmMat4Identity(mvp);
+            util.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
+            glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);
+            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-                // render to texture 
-                GLES2.glClearColor(0.4f, 0.8f, 0.2f, 0.0f);
-                GLES2.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, rttrendbuff);
-                GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, rttframebuff);
-                GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, texture);             
-                GLES2.glViewport(0, 0, 128,128);
-                util.kmMat4Identity(mvp);
-                util.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
-                GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
-                GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT|GLES2.GL_DEPTH_BUFFER_BIT);
+            glVertexAttribPointer(attr_pos, 2, GL_FLOAT, GL_FALSE, 0, vertsBuffer);
+            glVertexAttribPointer(attr_color, 3, GL_FLOAT, GL_FALSE, 0, coloursBuffer);
+            glVertexAttribPointer(attr_uv, 2, GL_FLOAT, GL_FALSE, 0, uvBuffer);
+            glEnableVertexAttribArray(attr_pos);
+            glEnableVertexAttribArray(attr_color);
+            glEnableVertexAttribArray(attr_uv);
 
-                GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
-                GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
-                GLES2.glVertexAttribPointer(attr_uv, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, uvBuffer);
-                GLES2.glEnableVertexAttribArray(attr_pos);
-                GLES2.glEnableVertexAttribArray(attr_color);
-                GLES2.glEnableVertexAttribArray(attr_uv);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
 
-                GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
-
-                GLES2.glDisableVertexAttribArray(attr_pos);
-                GLES2.glDisableVertexAttribArray(attr_color);
-                GLES2.glDisableVertexAttribArray(attr_uv);
+            glDisableVertexAttribArray(attr_pos);
+            glDisableVertexAttribArray(attr_color);
+            glDisableVertexAttribArray(attr_uv);
 
             // render to the backbuffer
-            GLES2.glBindTexture(GLES2.GL_TEXTURE_2D, rtt);
-            GLES2.glBindFramebuffer(GLES2.GL_FRAMEBUFFER, 0);
-            GLES2.glBindRenderbuffer(GLES2.GL_FRAMEBUFFER, 0);
-            GLES2.glViewport(0, 0, util.getWidth(), util.getHeight());
+            glBindTexture(GL_TEXTURE_2D, rtt);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindRenderbuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, util.getWidth(), util.getHeight());
             
             util.kmMat4Identity(model);
 
             util.kmMat4Translation(model,0,0,-4+((float)Math.sin(frame/30f)*2f));                       
-            util.kmMat4RotationPitchYawRoll(model,  frame/30f,
-                                                    frame/40f,
-                                                    frame/50f);
+            util.kmMat4RotationPitchYawRoll(model,  frame/40f,
+                                                    frame/50f,
+                                                    frame/60f);
             util.kmMat4Multiply(mvp,vp,model);
-            GLES2.glUniformMatrix4fv(u_matrix, 1, GLES2.GL_FALSE, mvp);
+            glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);
 
-            GLES2.glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
-            GLES2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
+            glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
-            GLES2.glVertexAttribPointer(attr_pos, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, vertsBuffer);
-            GLES2.glVertexAttribPointer(attr_color, 3, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, coloursBuffer);
-            GLES2.glVertexAttribPointer(attr_uv, 2, GLES2.GL_FLOAT, GLES2.GL_FALSE, 0, uvBuffer);
-            GLES2.glEnableVertexAttribArray(attr_pos);
-            GLES2.glEnableVertexAttribArray(attr_color);
-            GLES2.glEnableVertexAttribArray(attr_uv);
+            glVertexAttribPointer(attr_pos, 2, GL_FLOAT, GL_FALSE, 0, vertsBuffer);
+            glVertexAttribPointer(attr_color, 3, GL_FLOAT, GL_FALSE, 0, coloursBuffer);
+            glVertexAttribPointer(attr_uv, 2, GL_FLOAT, GL_FALSE, 0, uvBuffer);
+            glEnableVertexAttribArray(attr_pos);
+            glEnableVertexAttribArray(attr_color);
+            glEnableVertexAttribArray(attr_uv);
 
-            GLES2.glDrawArrays(GLES2.GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
 
-            GLES2.glDisableVertexAttribArray(attr_pos);
-            GLES2.glDisableVertexAttribArray(attr_color);
-            GLES2.glDisableVertexAttribArray(attr_uv);
+            glDisableVertexAttribArray(attr_pos);
+            glDisableVertexAttribArray(attr_color);
+            glDisableVertexAttribArray(attr_uv);
             
             // flip
             EGL.eglSwapBuffers(egl_display, egl_surface);    
 
-            try {
-                Thread.sleep(20);
-            } catch (Exception e) {
-                // nada
-            }
-            
+            // updates the keyboard and services window events
             util.pumpEvents(native_display,native_win);
             
             if (util.resizeRequired()) {
+                // if the screen is resized then the projection
+                // and view/projection matrices need updating
                 int w=util.getWidth();
                 int h=util.getHeight();
-                GLES2.glViewport(0, 0, w, h);
+                glViewport(0, 0, w, h);
                 util.kmMat4PerspectiveProjection(projection, 45f,
                                         (float)w / h, 0.1f, 10); 
                 util.kmMat4Identity(vp);

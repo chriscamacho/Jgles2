@@ -1,6 +1,12 @@
 #include "Jgles2_util.h"
 #include <EGL/egl.h>
 
+JNIEXPORT jboolean JNICALL Java_Jgles2_EGL_eglSwapInterval
+  (JNIEnv *e, jclass c, jlong d, jint i)
+{
+    return eglSwapInterval((EGLDisplay)d,i);
+}
+
 JNIEXPORT jlong JNICALL Java_Jgles2_EGL_eglGetDisplay
                                 (JNIEnv *e, jclass c, jlong d) 
 {

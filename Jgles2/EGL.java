@@ -125,6 +125,7 @@ public class EGL {
     static public native void eglSwapBuffers(long egl_display, long egl_surface);
     static public native boolean eglDestroySurface( long egl_display, long egl_surface);
     static public native boolean eglDestroyContext( long egl_display, long egl_context);        
+    static public native boolean eglSwapInterval(long display, int interval);
     
     EGL() {
         
