@@ -49,11 +49,6 @@ public class test {
             System.exit(-1);
         }
 
-
-
-
-
-
         // val is a integer intBuffer which is reused for various int return values
         IntBuffer val = BufferUtils.createIntBuffer(2);
         
@@ -100,6 +95,7 @@ public class test {
             "varying vec2 v_frag_uv; \n"+
             "void main() {\n"+
             "	vec4 baseColour = texture2D(u_texture,v_frag_uv);\n"+
+//            "   gl_FragColor = v_color/2f + baseColour/2f;\n"+
             "   gl_FragColor = v_color * baseColour;\n"+
             "}\n";
 

@@ -559,127 +559,130 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGetUniformfv
     GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
     glGetUniformfv(pr,l,p);
 }
-/*
+
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGetUniformiv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint pr, jint l, jobject jp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
+    glGetUniformiv(pr,l,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGetVertexAttribfv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint pr, jint l, jobject jp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
+    glGetVertexAttribfv(pr,l,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGetVertexAttribiv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint pr, jint l, jobject jp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
+    glGetVertexAttribiv(pr,l,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glHint
-  (JNIEnv *e, jclass c, jint, jint)
+  (JNIEnv *e, jclass c, jint t, jint m)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glHint(t,m);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsBuffer
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsBuffer(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsEnabled
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsEnabled(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsFramebuffer
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsFramebuffer(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsProgram
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsProgram(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsRenderbuffer
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsRenderbuffer(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsShader
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsShader(i);
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_GLES2_glIsTexture
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    return glIsTexture(i);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glLineWidth
-  (JNIEnv *e, jclass c, jfloat)
+  (JNIEnv *e, jclass c, jfloat f)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glLineWidth(f);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glPixelStorei
-  (JNIEnv *e, jclass c, jint, jint)
+  (JNIEnv *e, jclass c, jint pn, jint p)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glPixelStori(pn,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glPolygonOffset
-  (JNIEnv *e, jclass c, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jfloat f, jfloat u)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glPolygonOffset(f,u);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glReleaseShaderCompiler
   (JNIEnv *e, jclass c)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glReleaseShaderCompiler();
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glSampleCoverage
-  (JNIEnv *e, jclass c, jfloat, jboolean)
+  (JNIEnv *e, jclass c, jfloat f, jboolean i)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glSampleCoverage(f,i);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glScissor
-  (JNIEnv *e, jclass c, jint, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint x, jint y, jint w, jint h)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glScissor(x,y,w,h);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glShaderBinary
-  (JNIEnv *e, jclass c, jint, jobject, jint, jobject, jint)
+  (JNIEnv *env, jclass cls, jint a, jobject b, jint c, jobject d, jint e)
 {
     assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilFunc
-  (JNIEnv *e, jclass c, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint f, jint r, jint m)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilFunc(f,r,m);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilFuncSeparate
-  (JNIEnv *e, jclass c, jint, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint fc, jint f, jint r, jint m)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilFuncSeperate(fc,f,r,m);
 }
-
+/*
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilMask
   (JNIEnv *e, jclass c, jint)
 {

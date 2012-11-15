@@ -311,8 +311,31 @@ public class GLES2 {
     public static final int GL_SAMPLE_COVERAGE_VALUE          =   0x80AA;
     public static final int GL_SAMPLE_COVERAGE_INVERT         =   0x80AB;
 
+/* Buffer Objects */
+    public static final int GL_ARRAY_BUFFER                   =     0x8892;
+    public static final int GL_ELEMENT_ARRAY_BUFFER           =     0x8893;
+    public static final int GL_ARRAY_BUFFER_BINDING           =     0x8894;
+    public static final int GL_ELEMENT_ARRAY_BUFFER_BINDING   =     0x8895;
 
+    public static final int GL_STREAM_DRAW                    =     0x88E0;
+    public static final int GL_STATIC_DRAW                    =     0x88E4;
+    public static final int GL_DYNAMIC_DRAW                   =     0x88E8;
 
+    public static final int GL_BUFFER_SIZE                    =     0x8764;
+    public static final int GL_BUFFER_USAGE                   =     0x8765;
+
+    public static final int GL_CURRENT_VERTEX_ATTRIB          =     0x8626;
+
+/* ErrorCode */
+    public static final int GL_NO_ERROR                       =     0;
+    public static final int GL_INVALID_ENUM                   =     0x0500;
+    public static final int GL_INVALID_VALUE                  =     0x0501;
+    public static final int GL_INVALID_OPERATION              =     0x0502;
+    public static final int GL_OUT_OF_MEMORY                  =     0x0505;
+
+/* FrontFaceDirection */
+    public static final int GL_CW                             =     0x0900;
+    public static final int GL_CCW                            =     0x0901;
 
 
 
@@ -322,8 +345,9 @@ public class GLES2 {
  *          exactly like their C counter parts
  * 
  * 
-    public static native void glGetActiveAttrib(int program, int index,int bufSize, 
+    void glGetActiveAttrib(int program, int index,int bufSize, 
                     IntBuffer length, IntBuffer size, int *type, GLchar *name);
+
     void glGetActiveUniform (	int program,int index,int bufSize,IntBuffer length,
                     IntBuffer size,int *type,GLchar *name) ;
 
@@ -410,15 +434,6 @@ void* data) ;  TODO best way to handle this
     public static native void glVertexAttrib2fv(int index,FloatBuffer v);
     public static native void glVertexAttrib3fv(int index,FloatBuffer v);
     public static native void glVertexAttrib4fv(int index,FloatBuffer v);
-
-
-
-
-
-
-
-
-
     public static native void glDepthRangef(float nearVal,float farVal) ;
     public static native void glDetachShader(int program,int shader) ;
     public static native void glDrawElements(int mode,int count,int type,IntBuffer ind);
@@ -467,20 +482,15 @@ void* data) ;  TODO best way to handle this
     public static native void glGenRenderbuffers(int n, IntBuffer renderbuffers);
     public static native void glBindRenderbuffer(int target, int renderbuffer);
     public static native void glFramebufferTexture2D(int target,int attachment,int textarget,int texture,int level);
-
     public static native void glActiveTexture(int texture);
-    public static native void glAttachShader(int program, int fragShader);
-    
+    public static native void glAttachShader(int program, int fragShader);    
     public static native void glGenTextures(int num, IntBuffer names);
     public static native void glBindTexture(int type, int texname);
-
     public static native void glTexParameterf(int target,int pname,float param);
     public static native void glTexParameteri(int target,int pname,int param);         
     public static native void glTexImage2D(int target,int level,int internalformat,
                                     int width,int height,int border,int format,
                                     int type,ByteBuffer data) ;
-
-    
     public static native String glGetString(int attrib); 
     public static native void glClearColor(float r, float g, float b, float a);
     public static native int glCreateShader(int type);
