@@ -7,6 +7,9 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
 import java.nio.ByteBuffer;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class test {
     
@@ -166,25 +169,41 @@ public class test {
         float verts[] = {
             -1, -1,
              1, -1,
-             0,  1
+             1,  1,
+             
+            -1, -1,
+             1,  1,
+            -1,  1
         };
         
         float uvs[] = {
             0.0f,0.0f,
-            0.0f,2.0f,
-            2.0f,2.0f
+            2.0f,0.0f,
+            2.0f,2.0f,
+            
+            0.0f,0.0f,
+            2.0f,2.0f,
+            0.0f,2.0f
         };
         
         float colours[] = {
-            1, 0, 0 ,
-            0, 1, 0 ,
-            0, 0, 1 
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+            
+            1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 1.0f, 0.0f
         };
 
         float coloursT[] = {
-            1, 1, 1 ,
-            1, 1, 1 ,
-            1, 1, 1 
+            1, 1, 1,
+            1, 1, 1,
+            1, 1, 1,
+            
+            1,1,1,
+            1,1,1,
+            1,1,1 
         };
 
         FloatBuffer vertsBuffer = BufferUtils.createFloatBuffer(verts.length);
@@ -229,33 +248,51 @@ public class test {
 
 
 
-        // normally you'd load this directly into a buffer
-        int texData[] = {
-0xff,0x00,0x00, 0xff,0xff,0xff, 0x00,0x00,0xff, 0x00,0xff,0x00, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0xff,0x00, 0xff,0x00,0x00, 
-0x00,0xff,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0x00,0x00,0xff, 
-0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0xff,0x00, 
-0xff,0x00,0x00, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0xff,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0xff,0x00,0x00, 
-0x00,0xff,0x00, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0xff,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 
-0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0xff,0x00, 
-0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 0xff,0x00,0x00, 
-0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 0xff,0x00,0x00, 0x00,0xff,0x00, 0x00,0x00,0xff, 
-        };
-        
-        ByteBuffer textureBuffer = BufferUtils.createByteBuffer(texData.length);
-        for (int d:texData) textureBuffer.put((byte)d);
-
         glActiveTexture(GL_TEXTURE0);
+        
+        // TODO this section should turn into a routine in util class
+        // that takes a png file name and returns a GLES texture name...
+                BufferedImage image=null;
+                try {
+                    image = ImageIO.read(new File("data/parrot.png"));
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
 
-        // this texture is the image on the triangle thats rendered onto
-        // the texture thats used to render the triangle on the screen
-        int texture;
-        glGenTextures(1, val);
-        texture=val.get(0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGB,
-                     GL_UNSIGNED_BYTE, textureBuffer);
+                int[] pixels = new int[image.getWidth() * image.getHeight()];
+                image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+
+                ByteBuffer textureBuffer = BufferUtils.createByteBuffer(image.getWidth()*image.getHeight()*4);
+                int i=0;
+                for(int y = 0; y < image.getHeight(); y++){
+                    for(int x = 0; x < image.getWidth(); x++){
+                        int pixel = pixels[i++];
+                        textureBuffer.put((byte) ((pixel >> 16) & 0xFF)); 
+                        textureBuffer.put((byte) ((pixel >> 8) & 0xFF)); 
+                        textureBuffer.put((byte) (pixel & 0xFF));     
+                        textureBuffer.put((byte) ((pixel >> 24) & 0xFF));
+                    }
+                }
+
+                textureBuffer.flip(); 
+
+                // this texture is the image on the triangle thats rendered onto
+                // the texture thats used to render the triangle on the screen
+                int texture;
+                glGenTextures(1, val);
+                texture=val.get(0);
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA,
+                             GL_UNSIGNED_BYTE, textureBuffer);
+                image=null;
+                textureBuffer=null;
+                pixels=null;
+        
+        
+        
+        
                      
         // set up for RTT
         ByteBuffer rttBB = BufferUtils.createByteBuffer(128*128*3);
@@ -299,7 +336,7 @@ public class test {
             glEnableVertexAttribArray(attr_color);
             glEnableVertexAttribArray(attr_uv);
 
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
 
             glDisableVertexAttribArray(attr_pos);
             glDisableVertexAttribArray(attr_color);
@@ -307,6 +344,7 @@ public class test {
 
             // render to the backbuffer
             glBindTexture(GL_TEXTURE_2D, rtt);
+            
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glBindRenderbuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, util.getWidth(), util.getHeight());
@@ -338,7 +376,7 @@ public class test {
             glEnableVertexAttribArray(attr_color);
             glEnableVertexAttribArray(attr_uv);
 
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
 
             glDisableVertexAttribArray(attr_pos);
             glDisableVertexAttribArray(attr_color);
