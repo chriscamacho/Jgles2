@@ -1,18 +1,20 @@
 
 Jgles2
-
+------
 
 NB see porting at the end...
 
 
 Why GLES 2.0?
+-------------
 
 it makes a very nice subset of the various versions of opengl, and its
 basically everywhere from your phone to your browser (webgl)
 
 
 
-Why not just use LWJGL or <insert your binding of choice here> ?
+Why not just use LWJGL or [ insert your binding of choice here ] ?
+------------------------------------------------------------------
 
 LWJGL is a fantastic library to use and it makes a great "driver"
 layer for higher level libraries such as libGDX, however it's not "pure"
@@ -25,6 +27,7 @@ the binary download.
 
 
 So is there a better way to organise a subset?
+----------------------------------------------
 
 I aim to provide (in the end) just three classes
 
@@ -37,12 +40,14 @@ Jgles2.GLES2   access to libGLES v2.0
 
 
 Is it just like using GLES ?
+----------------------------
 
 Its fairly close but there are some slight differences for convenience
 
 
 
 So is it ready to rock and roll ?
+---------------------------------
 
 ...well close(ish) at the moment the test class shows a single triangle
 rotating and moving in a 3d view and exits when the escape key is pressed
@@ -51,6 +56,7 @@ there is mouse handling too as well as support for window resizing
 
 
 Porting - you can help
+----------------------
 
 If you want to port Jgles to your platform (it would certainly be
 apreciated) I have marked any platform specific with #ifdef XORG
@@ -94,6 +100,7 @@ the jni wrapper uses.
 
 
 I'd like to chat to talk about how I might help?
+------------------------------------------------
 
 my email account is codifies with googles mail service.
  
