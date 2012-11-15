@@ -23,6 +23,23 @@ int __mouse[3]; // TODO implement java access routines for this...
 bool __resize=false;
 int __width,__height;
 
+JNIEXPORT jint JNICALL Java_Jgles2_util_getMouseButtons
+  (JNIEnv *e, jclass c)
+{
+    return __mouse[2];
+}
+
+JNIEXPORT jint JNICALL Java_Jgles2_util_getMouseX
+  (JNIEnv *e, jclass c) 
+{
+    return __mouse[0];
+}
+
+JNIEXPORT jint JNICALL Java_Jgles2_util_getMouseY
+  (JNIEnv *e, jclass c) 
+{
+    return __mouse[1];
+}
 
 
 JNIEXPORT jlong JNICALL Java_Jgles2_util_get_1native_1display(JNIEnv *e, jobject o) {
@@ -198,7 +215,7 @@ JNIEXPORT jint JNICALL Java_Jgles2_util_getWidth
 JNIEXPORT jboolean JNICALL Java_Jgles2_util_keyDown
   (JNIEnv *e, jclass c, jint k)
 {
-    return !__keys[k];
+    return __keys[k];
 }
 
 JNIEXPORT jboolean JNICALL Java_Jgles2_util_resizeRequired
