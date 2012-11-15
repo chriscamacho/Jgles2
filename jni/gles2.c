@@ -682,202 +682,217 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilFuncSeparate
 {
     glStencilFuncSeperate(fc,f,r,m);
 }
-/*
+
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilMask
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint m)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilMask(m);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilMaskSeparate
-  (JNIEnv *e, jclass c, jint, jint)
+  (JNIEnv *e, jclass c, jint f, jint m)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilMaskSeparate(f,m);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilOp
-  (JNIEnv *e, jclass c, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint f, jint zf, jint zp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilOp(f,zf,zp);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilOpSeparate
-  (JNIEnv *e, jclass c, jint, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint fc, jint f, jint zf, jint zp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glStencilOpSeparate(fc,f,zf,zp);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glTexParameterfv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint t, jint pn, jobject jp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
+    glTexParameterfv(t,pn,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glTexParameteriv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint t, jint pn, jobject jp)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* p = (GLvoid*)(*e)->GetDirectBufferAddress(e, jp);
+    glTexParameteriv(t,pn,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform1f
-  (JNIEnv *e, jclass c, jint, jfloat)
+  (JNIEnv *e, jclass c, jint l, jfloat x)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform1f(l,x);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform2f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint l, jfloat x, jfloat y)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform2f(l,x,y);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform3f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint l, jfloat x, jfloat y, jfloat z)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform3f(l,x,y,z);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform4f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint l, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform4f(l,x,y,z,w);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform1i
-  (JNIEnv *e, jclass c, jint, jint)
+  (JNIEnv *e, jclass c, jint l, jint x)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform1i(l,x);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform2i
-  (JNIEnv *e, jclass c, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint l, jint x, jint y)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform2i(l,x,y);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform3i
-  (JNIEnv *e, jclass c, jint, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint l, jint x, jint y, jint z)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform3i(l,x,y,z);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform4i
-  (JNIEnv *e, jclass c, jint, jint, jint, jint, jint)
+  (JNIEnv *e, jclass c, jint l, jint x, jint y, jint z, jint w)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glUniform4i(l,x,y,z,w);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform1fv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform1fv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform2fv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform2fv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform3fv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform3fv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform4fv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform4fv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform1iv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform1iv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform2iv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform2iv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform3iv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform3iv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniform4iv
-  (JNIEnv *e, jclass c, jint, jint, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniform4iv(l,n,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniformMatrix2fv
-  (JNIEnv *e, jclass c, jint, jint, jboolean, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jboolean t, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniformMatrix2fv(l,n,t,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniformMatrix3fv
-  (JNIEnv *e, jclass c, jint, jint, jboolean, jobject)
+  (JNIEnv *e, jclass c, jint l, jint n, jboolean t, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glUniformMatrix3fv(l,n,t,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glValidateProgram
-  (JNIEnv *e, jclass c, jint)
+  (JNIEnv *e, jclass c, jint p)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glValidateProgram(p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib1f
-  (JNIEnv *e, jclass c, jint, jfloat)
+  (JNIEnv *e, jclass c, jint i, jfloat x)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glVertexAttrib1f(i,x);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib2f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint i, jfloat x, jfloat y)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glVertexAttrib2f(i,x,y);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib3f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint i, jfloat x, jfloat y, jfloat z)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glVertexAttrib3f(i,x,y,z);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib4f
-  (JNIEnv *e, jclass c, jint, jfloat, jfloat, jfloat, jfloat)
+  (JNIEnv *e, jclass c, jint i, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    glVertexAttrib4f(i,x,y,z,w);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib1fv
-  (JNIEnv *e, jclass c, jint, jobject)
+  (JNIEnv *e, jclass c, jint i, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glVertexAttrib1fv(i,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib2fv
-  (JNIEnv *e, jclass c, jint, jobject)
+  (JNIEnv *e, jclass c, jint i, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glVertexAttrib2fv(i,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib3fv
-  (JNIEnv *e, jclass c, jint, jobject)
+  (JNIEnv *e, jclass c, jint i, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glVertexAttrib3fv(i,v);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib4fv
-  (JNIEnv *e, jclass c, jint, jobject)
+  (JNIEnv *e, jclass c, jint i, jobject jv)
 {
-    assert("dont waste time debugging your code this call isnt implemented! send patch or ask for implementation." && 0);
+    GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
+    glVertexAttrib4fv(i,v);
 }
-*/

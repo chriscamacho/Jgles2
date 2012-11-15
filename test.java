@@ -193,7 +193,7 @@ public class test {
             
             1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f,
-            0.0f, 1.0f, 0.0f
+            1.0f, 1.0f, 1.0f
         };
 
         float coloursT[] = {
@@ -319,7 +319,7 @@ public class test {
             frame++;
 
             // render to texture 
-            glClearColor(1f, 1f, 1f, 0.0f);
+            glClearColor(0f, 0f, 0f, 0.0f);
             glBindRenderbuffer(GL_RENDERBUFFER, rttrendbuff);
             glBindFramebuffer(GL_FRAMEBUFFER, rttframebuff);
             glBindTexture(GL_TEXTURE_2D, texture);             
