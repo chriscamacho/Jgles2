@@ -29,13 +29,15 @@ the binary download.
 So is there a better way to organise a subset?
 ----------------------------------------------
 
-I aim to provide (in the end) just three classes
+I aim to provide (in the end) just three (or four) classes
 
 Jgles2.util    some platform specific stuff, general utilities etc.
 
 Jgles2.EGL     access to libEGL
 
 Jgles2.GLES2   access to libGLES v2.0
+
+Jgles2.Kazmath  I might breakout kazmath from the util class
 
 
 
