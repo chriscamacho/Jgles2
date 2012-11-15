@@ -29,7 +29,9 @@ So is there a better way to organise a subset?
 I aim to provide (in the end) just three classes
 
 Jgles2.util    some platform specific stuff, general utilities etc.
+
 Jgles2.EGL     access to libEGL
+
 Jgles2.GLES2   access to libGLES v2.0
 
 
@@ -44,6 +46,7 @@ So is it ready to rock and roll ?
 
 ...well close(ish) at the moment the test class shows a single triangle
 rotating and moving in a 3d view and exits when the escape key is pressed
+there is mouse handling too as well as support for window resizing
 
 
 
@@ -58,23 +61,34 @@ get_native_display() - returns the native handle used to create the EGL
 display handle
 
 make_native_window(
+
     native_display,     the native display handle
+    
     egl_display         the EGL display handle
+    
     config              the chosen EGL config
+    
     x, y,               position on the screen
+    
     width, height,      width/height of window 
+    
     fullscreen)         should it be fullscreen without decoration
+    
 
 pumpEvents(native_Display,native_window)
+
 this is resposible for collection keyboard and mouse events
 and notifying the application that the screen needs resizing
 its is responsible for modifying the following global variables
 the jni wrapper uses.
 
-bool __keys[256];       keydown flags
-int __mouse[3];         x,y,buttons
-bool __resize=false;    resize needed
-int __width,__height;   when resized the dimensions are stored here.
+        bool __keys[256];       keydown flags
+
+        int __mouse[3];         x,y,buttons
+
+        bool __resize=false;    resize needed
+
+        int __width,__height;   when resized the dimensions are stored here.
 
 
 
