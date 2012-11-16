@@ -1,6 +1,10 @@
 
 package Jgles2;
 
+import java.nio.ByteOrder;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 import java.nio.FloatBuffer;
 
 public class util {
@@ -143,24 +147,56 @@ public class util {
     public static native int getMouseX();
     public static native int getMouseY();
     
-    
+        
 
-    // kazmath
-    public static native FloatBuffer kmMat4Identity(FloatBuffer mat);
-    public static native FloatBuffer kmVec3Fill(FloatBuffer v, float x, float y, float z);
-    public static native FloatBuffer kmVec3Subtract(FloatBuffer out,FloatBuffer p1,FloatBuffer p2);
-    public static native FloatBuffer kmVec3Normalize(FloatBuffer out,FloatBuffer in);
-    public static native float kmVec3Length(FloatBuffer in);
-    public static native FloatBuffer kmMat4LookAt(FloatBuffer view,FloatBuffer eye,FloatBuffer centre,FloatBuffer up);
-    public static native FloatBuffer kmMat4PerspectiveProjection(FloatBuffer projection, float fov,
-                                float aspect, float near, float far);
-    public static native FloatBuffer kmMat4Multiply(FloatBuffer out,FloatBuffer mat1,FloatBuffer mat2);
-    public static native FloatBuffer kmMat4Translation(FloatBuffer mat, float x, float y, float z);
-    public static native FloatBuffer kmMat4RotationX(FloatBuffer mat, float rad);
-    public static native FloatBuffer kmMat4RotationY(FloatBuffer mat, float rad);
-    public static native FloatBuffer kmMat4RotationZ(FloatBuffer mat, float rad);
-    public static native FloatBuffer kmMat4RotationPitchYawRoll(FloatBuffer mat, float x, float y, float z);
-    
+/*  the following 4 create buffer routines come from lwjgl
+ *  fairly trivial not sure how else you'd do them but still...
+ * 
+ * Copyright (c) 2002-2008 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+	public static ByteBuffer createByteBuffer(int size) {
+		return ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder());
+	}
+	public static IntBuffer createIntBuffer(int size) {
+		return createByteBuffer(size << 2).asIntBuffer();
+	}
+	public static LongBuffer createLongBuffer(int size) {
+		return createByteBuffer(size << 3).asLongBuffer();
+	}
+	public static FloatBuffer createFloatBuffer(int size) {
+		return createByteBuffer(size << 2).asFloatBuffer();
+	}
+
     
     util() {
         
