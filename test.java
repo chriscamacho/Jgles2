@@ -1,7 +1,7 @@
 import Jgles2.util;
 import Jgles2.EGL;
 import static Jgles2.GLES2.*;
-import Jgles2.BufferUtils;
+import Jgles2.kazmath;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
@@ -38,10 +38,10 @@ public class test {
             EGL.EGL_NONE // end of list
         };
         // buffers for EGL attributs 
-        IntBuffer attribsBuffer = BufferUtils.createIntBuffer(attribs.length);
+        IntBuffer attribsBuffer = util.createIntBuffer(attribs.length);
         attribsBuffer.put(attribs);
         
-        IntBuffer ctx_attribsBuffer = BufferUtils.createIntBuffer(ctx_attribs.length);
+        IntBuffer ctx_attribsBuffer = util.createIntBuffer(ctx_attribs.length);
         ctx_attribsBuffer.put(ctx_attribs);
         
         long native_display = util.get_native_display();
@@ -53,10 +53,10 @@ public class test {
         }
 
         // val is a integer intBuffer which is reused for various int return values
-        IntBuffer val = BufferUtils.createIntBuffer(2);
+        IntBuffer val = util.createIntBuffer(2);
         
         int config_size=1; // wouldn't normally check that many - just for testing!
-        LongBuffer configsBuffer = BufferUtils.createLongBuffer(config_size);
+        LongBuffer configsBuffer = util.createLongBuffer(config_size);
         
         if (!EGL.eglChooseConfig(egl_display, attribsBuffer,
                                     configsBuffer, config_size, val)) {
@@ -206,45 +206,45 @@ public class test {
             1,1,1 
         };
 
-        FloatBuffer vertsBuffer = BufferUtils.createFloatBuffer(verts.length);
+        FloatBuffer vertsBuffer = util.createFloatBuffer(verts.length);
         vertsBuffer.put(verts);
-        FloatBuffer coloursBuffer = BufferUtils.createFloatBuffer(colours.length);
+        FloatBuffer coloursBuffer = util.createFloatBuffer(colours.length);
         coloursBuffer.put(colours);
-        FloatBuffer coloursTBuffer = BufferUtils.createFloatBuffer(coloursT.length);
+        FloatBuffer coloursTBuffer = util.createFloatBuffer(coloursT.length);
         coloursTBuffer.put(coloursT);
-        FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(uvs.length);
+        FloatBuffer uvBuffer = util.createFloatBuffer(uvs.length);
         uvBuffer.put(uvs);
         
         // kmMat4 struct is 16 floats (love the KISS principle)
-        FloatBuffer view = BufferUtils.createFloatBuffer(16);
-        util.kmMat4Identity(view);
+        FloatBuffer view = util.createFloatBuffer(16);
+        kazmath.kmMat4Identity(view);
 
-        FloatBuffer eye = BufferUtils.createFloatBuffer(3);
-        FloatBuffer centre = BufferUtils.createFloatBuffer(3);
-        FloatBuffer up = BufferUtils.createFloatBuffer(3);
+        FloatBuffer eye = util.createFloatBuffer(3);
+        FloatBuffer centre = util.createFloatBuffer(3);
+        FloatBuffer up = util.createFloatBuffer(3);
         
-        util.kmVec3Fill(eye,    0, 0, 0);
-        util.kmVec3Fill(centre, 0, 0,-5);
-        util.kmVec3Fill(up,     0, 1, 0);
+        kazmath.kmVec3Fill(eye,    0, 0, 0);
+        kazmath.kmVec3Fill(centre, 0, 0,-5);
+        kazmath.kmVec3Fill(up,     0, 1, 0);
 
-        util.kmMat4LookAt(view, eye, centre, up);
+        kazmath.kmMat4LookAt(view, eye, centre, up);
 
-        FloatBuffer projection = BufferUtils.createFloatBuffer(16);
-        util.kmMat4Identity(projection);
+        FloatBuffer projection = util.createFloatBuffer(16);
+        kazmath.kmMat4Identity(projection);
         
-        util.kmMat4PerspectiveProjection(projection, 45f,
+        kazmath.kmMat4PerspectiveProjection(projection, 45f,
                                 (float)winWidth / winWidth, 0.1f, 10);
 
         // combine view and projection matrix as we dont need to
         // calculate them each frame unless something changes
-        FloatBuffer vp = BufferUtils.createFloatBuffer(16);
-        util.kmMat4Identity(vp);
-        util.kmMat4Multiply(vp,view,projection);  
+        FloatBuffer vp = util.createFloatBuffer(16);
+        kazmath.kmMat4Identity(vp);
+        kazmath.kmMat4Multiply(vp,view,projection);  
         
         // model matrix is the position/orientation for an individual
         // model, the mvp matrix is the final matrix used by the shader
-        FloatBuffer model = BufferUtils.createFloatBuffer(16);
-        FloatBuffer mvp = BufferUtils.createFloatBuffer(16);
+        FloatBuffer model = util.createFloatBuffer(16);
+        FloatBuffer mvp = util.createFloatBuffer(16);
 
 
 
@@ -262,7 +262,7 @@ public class test {
                 int[] pixels = new int[image.getWidth() * image.getHeight()];
                 image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
-                ByteBuffer textureBuffer = BufferUtils.createByteBuffer(image.getWidth()*image.getHeight()*4);
+                ByteBuffer textureBuffer = util.createByteBuffer(image.getWidth()*image.getHeight()*4);
                 int i=0;
                 for(int y = 0; y < image.getHeight(); y++){
                     for(int x = 0; x < image.getWidth(); x++){
@@ -295,7 +295,7 @@ public class test {
         
                      
         // set up for RTT
-        ByteBuffer rttBB = BufferUtils.createByteBuffer(128*128*3);
+        ByteBuffer rttBB = util.createByteBuffer(128*128*3);
         glGenFramebuffers(1, val);    int rttframebuff = val.get(0);
         glGenTextures(1, val);        int rtt = val.get(0);
         glBindTexture(GL_TEXTURE_2D, rtt);
@@ -324,8 +324,8 @@ public class test {
             glBindFramebuffer(GL_FRAMEBUFFER, rttframebuff);
             glBindTexture(GL_TEXTURE_2D, texture);             
             glViewport(0, 0, 128,128);
-            util.kmMat4Identity(mvp);
-            util.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
+            kazmath.kmMat4Identity(mvp);
+            kazmath.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
             glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -349,21 +349,21 @@ public class test {
             glBindRenderbuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, util.getWidth(), util.getHeight());
             
-            util.kmMat4Identity(model);
+            kazmath.kmMat4Identity(model);
             if (util.getMouseButtons()!=0) {
-                util.kmMat4Translation(model,
+                kazmath.kmMat4Translation(model,
                         ((float)util.getMouseX()/(float)util.getWidth()-0.5f)*3,
                         -((float)util.getMouseY()/(float)util.getHeight()-0.5f)*3,
                         -4+((float)Math.sin(frame/80f)*2f));  
             } else {
-                util.kmMat4Translation(model,0,0,-4+((float)Math.sin(frame/80f)*2f));  
+                kazmath.kmMat4Translation(model,0,0,-4+((float)Math.sin(frame/80f)*2f));  
             }
             if (!util.keyDown(util.KEY_SPACE)) {                     
-                util.kmMat4RotationPitchYawRoll(model,  frame/100f,
+                kazmath.kmMat4RotationPitchYawRoll(model,  frame/100f,
                                                         frame/120f,
                                                         frame/130f);
             }
-            util.kmMat4Multiply(mvp,vp,model);
+            kazmath.kmMat4Multiply(mvp,vp,model);
             glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);
 
             glClearColor(0.8f, 0.4f, 0.2f, 0.0f);
@@ -394,10 +394,10 @@ public class test {
                 int w=util.getWidth();
                 int h=util.getHeight();
                 glViewport(0, 0, w, h);
-                util.kmMat4PerspectiveProjection(projection, 45f,
+                kazmath.kmMat4PerspectiveProjection(projection, 45f,
                                         (float)w / h, 0.1f, 10); 
-                util.kmMat4Identity(vp);
-                util.kmMat4Multiply(vp,view,projection);                
+                kazmath.kmMat4Identity(vp);
+                kazmath.kmMat4Multiply(vp,view,projection);                
             }
         }
 
