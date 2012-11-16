@@ -1,7 +1,10 @@
 #include "Jgles2_kazmath.h"
 
 #include <vec3.h>
+#include <mat3.h>
 #include <mat4.h>
+#include <quaternion.h>
+#include <plane.h>
 
 #include <assert.h>
 
@@ -185,6 +188,16 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec3RotationToDirection
 
 
 
+// kmMat4
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Fill
+  (JNIEnv *e, jclass c, jobject jo, jobject jm)
+{
+    kmMat4* o = (kmMat4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmScalar* m = (kmScalar*)(*e)->GetDirectBufferAddress(e, jm);
+    kmMat4Fill(o, m);
+    return jm;    
+}
 
 //    public static native FloatBuffer kmMat4Identity(FloatBuffer mat);
 JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Identity
@@ -195,27 +208,29 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Identity
     return m;
 }
 
-
-//    public static native FloatBuffer kmMat4LookAt(FloatBuffer view,FloatBuffer eye,FloatBuffer centre,FloatBuffer up);
-JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4LookAt
-  (JNIEnv *env, jclass cls, jobject v, jobject e, jobject c, jobject u)
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Inverse
+  (JNIEnv *e, jclass c, jobject jo, jobject jm)
 {
-    kmMat4* view = (kmMat4*)(*env)->GetDirectBufferAddress(env, v);
-    kmVec3* eye = (kmVec3*)(*env)->GetDirectBufferAddress(env, e);    
-    kmVec3* centre = (kmVec3*)(*env)->GetDirectBufferAddress(env, c);    
-    kmVec3* up = (kmVec3*)(*env)->GetDirectBufferAddress(env, u);
-    kmMat4LookAt(view,eye,centre,up);
-    return v;    
+    kmMat4* o = (kmMat4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat4* m = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);
+    kmMat4Inverse(o,m);
+    return jo;
 }
 
-//    public static native FloatBuffer kmMat4PerspectiveProjection(FloatBuffer projection, float fov,
-//                                float aspect, float near, float far);
-JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4PerspectiveProjection
-  (JNIEnv *e, jclass c, jobject p, jfloat fov, jfloat aspect, jfloat near, jfloat far)
+JNIEXPORT jint JNICALL Java_Jgles2_kazmath_kmMat4IsIdentity
+  (JNIEnv *e, jclass c, jobject ji)
 {
-    kmMat4* proj = (kmMat4*)(*e)->GetDirectBufferAddress(e, p);
-    kmMat4PerspectiveProjection(proj,fov,aspect,near,far);
-    return p;
+    kmMat4* i = (kmMat4*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmMat4IsIdentity(i);
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Transpose
+  (JNIEnv *e,jclass c, jobject jo, jobject jm)
+{
+    kmMat4* o = (kmMat4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat4* m = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);
+    kmMat4Transpose(o,m);
+    return jo;
 }
 
 //     public static native FloatBuffer kmMat4Multiply(FloatBuffer out,FloatBuffer mat1,FloatBuffer mat2);
@@ -229,14 +244,23 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Multiply
     return o;    
 }
 
-//    public static native FloatBuffer kmMat4Translation(FloatBuffer mat, float x, float y, float z);
-JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Translation
-  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Assign
+  (JNIEnv *e, jclass c, jobject m1, jobject m2)
 {
-    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
-    kmMat4Translation(mat,x,y,z);
-    return m;
+    kmMat4* mat1 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m1);
+    kmMat4* mat2 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m2);   
+    kmMat4Assign(mat1,mat2);
+    return m1;
 }
+
+JNIEXPORT jint JNICALL Java_Jgles2_kazmath_kmMat4AreEqual
+  (JNIEnv *e, jclass c, jobject m1, jobject m2)
+{
+    kmMat4* mat1 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m1);
+    kmMat4* mat2 = (kmMat4*)(*e)->GetDirectBufferAddress(e, m2);   
+    return kmMat4AreEqual(mat1,mat2);
+}
+
 
 JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationX
   (JNIEnv *e, jclass c, jobject m, jfloat rad)
@@ -270,3 +294,115 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationPitchYawRoll
     kmMat4RotationPitchYawRoll(mat,x,y,z);
     return m;
 }
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationQuaternion
+  (JNIEnv *e, jclass c, jobject ji, jobject jq)
+{
+    kmMat4* i = (kmMat4*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternion* q = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq);
+    kmMat4RotationQuaternion(i,q);
+    return ji;    
+}
+
+//    public static native FloatBuffer kmMat4Translation(FloatBuffer mat, float x, float y, float z);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Translation
+  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4Translation(mat,x,y,z);
+    return m;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4Scaling
+  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
+    kmMat4Scaling(mat,x,y,z);
+    return m;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4GetUpVec3
+  (JNIEnv *e, jclass c, jobject jv, jobject jm)
+{
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);   
+    kmMat4GetUpVec3(v,mat);
+    return jv;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4GetRightVec3
+  (JNIEnv *e, jclass c, jobject jv, jobject jm)
+{
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);   
+    kmMat4GetRightVec3(v,mat);
+    return jv;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4GetForwardVec3
+  (JNIEnv *e, jclass c, jobject jv, jobject jm)
+{
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);   
+    kmMat4GetForwardVec3(v,mat);
+    return jv;
+}
+
+//    public static native FloatBuffer kmMat4PerspectiveProjection(FloatBuffer projection, float fov,
+//                                float aspect, float near, float far);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4PerspectiveProjection
+  (JNIEnv *e, jclass c, jobject p, jfloat fov, jfloat aspect, jfloat near, jfloat far)
+{
+    kmMat4* proj = (kmMat4*)(*e)->GetDirectBufferAddress(e, p);
+    kmMat4PerspectiveProjection(proj,fov,aspect,near,far);
+    return p;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4OrthographicProjection
+  (JNIEnv *e, jclass c, jobject jm, jfloat l, jfloat r, jfloat b, jfloat t, jfloat n, jfloat f)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);       
+    kmMat4OrthographicProjection(mat,l,r,b,t,n,f);
+    return jm;
+}
+
+//    public static native FloatBuffer kmMat4LookAt(FloatBuffer view,FloatBuffer eye,FloatBuffer centre,FloatBuffer up);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4LookAt
+  (JNIEnv *env, jclass cls, jobject v, jobject e, jobject c, jobject u)
+{
+    kmMat4* view = (kmMat4*)(*env)->GetDirectBufferAddress(env, v);
+    kmVec3* eye = (kmVec3*)(*env)->GetDirectBufferAddress(env, e);    
+    kmVec3* centre = (kmVec3*)(*env)->GetDirectBufferAddress(env, c);    
+    kmVec3* up = (kmVec3*)(*env)->GetDirectBufferAddress(env, u);
+    kmMat4LookAt(view,eye,centre,up);
+    return v;    
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationAxisAngle
+  (JNIEnv *e, jclass c, jobject jm, jobject ja, jfloat r)
+{
+    kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);       
+    kmVec3* a = (kmVec3*)(*e)->GetDirectBufferAddress(e, ja);           
+    kmMat4RotationAxisAngle(mat,a,r);
+    return jm;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4ExtractRotation
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmMat3* o = (kmMat3*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat4* i = (kmMat4*)(*e)->GetDirectBufferAddress(e, ji);   
+    kmMat4ExtractRotation(o,i);
+    return jo;
+}
+
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4ExtractPlane
+  (JNIEnv *e, jclass c, jobject jo, jobject ji, jint p)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat4* i = (kmMat4*)(*e)->GetDirectBufferAddress(e, ji);       
+    kmMat4ExtractPlane(o, i, p);
+    return jo;
+}
+
+
