@@ -15,7 +15,51 @@ public class kazmath {
     public static int KM_PLANE_TOP      =   3;
     public static int KM_PLANE_NEAR     =   4;
     public static int KM_PLANE_FAR      =   5;
+
+    // mat3
     
+    public static native FloatBuffer kmMat3Fill(FloatBuffer pOut,  FloatBuffer pMat);
+    public static native FloatBuffer kmMat3Adjugate(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmMat3Identity(FloatBuffer pOut);
+    public static native FloatBuffer kmMat3Inverse(FloatBuffer pOut,  float pDeterminate,  FloatBuffer pM);
+    public static native int kmMat3IsIdentity( FloatBuffer pIn);
+    public static native FloatBuffer kmMat3Transpose(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native float kmMat3Determinant( FloatBuffer pIn);
+    public static native FloatBuffer kmMat3Multiply(FloatBuffer pOut,  FloatBuffer pM1,  FloatBuffer pM2);
+    public static native FloatBuffer kmMat3ScalarMultiply(FloatBuffer pOut,  FloatBuffer pM,  float pFactor);
+
+    public static native FloatBuffer kmMat3RotationAxisAngle(FloatBuffer pOut,  FloatBuffer axis, float radians);
+    public static native FloatBuffer kmMat3RotationToAxisAngle(FloatBuffer pAxis, FloatBuffer radians,  FloatBuffer pIn);
+
+    public static native FloatBuffer kmMat3Assign(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native int kmMat3AreEqual( FloatBuffer pM1,  FloatBuffer pM2);
+
+    public static native FloatBuffer kmMat3GetUpVec3(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmMat3GetRightVec3(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmMat3GetForwardVec3(FloatBuffer pOut,  FloatBuffer pIn);
+
+    public static native FloatBuffer kmMat3RotationX(FloatBuffer pOut,  float radians);
+    public static native FloatBuffer kmMat3RotationY(FloatBuffer pOut,  float radians);
+    public static native FloatBuffer kmMat3RotationZ(FloatBuffer pOut,  float radians);
+
+    public static native FloatBuffer kmMat3Rotation(FloatBuffer pOut,  float radians);
+    public static native FloatBuffer kmMat3Scaling(FloatBuffer pOut,  float x,  float y);
+    public static native FloatBuffer kmMat3Translation(FloatBuffer pOut,  float x,  float y);
+
+    public static native FloatBuffer kmMat3RotationQuaternion(FloatBuffer pOut,  FloatBuffer pIn);
+
+    
+    // aabb
+    
+    public static native int kmAABBContainsPoint( FloatBuffer pBox,  FloatBuffer pPoint);
+    public static native FloatBuffer  kmAABBAssign(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer  kmAABBScale(FloatBuffer pOut,  FloatBuffer pIn, float s);
+    public static native boolean kmAABBIntersectsTriangle(FloatBuffer box,  FloatBuffer p1,  FloatBuffer p2,  FloatBuffer p3);
+    public static native int kmAABBContainsAABB( FloatBuffer container,  FloatBuffer to_check);
+    public static native float kmAABBDiameterX( FloatBuffer aabb);
+    public static native float kmAABBDiameterY( FloatBuffer aabb);
+    public static native float kmAABBDiameterZ( FloatBuffer aabb);
+
     // mat4
     
     public static native FloatBuffer kmMat4Fill(FloatBuffer pOut, FloatBuffer pMat);

@@ -519,7 +519,9 @@ void* data) ;  TODO best way to handle this
                     int transpose,FloatBuffer value);
     public static native void glClear(int buffers);    
     
-    
+    static {
+        System.loadLibrary("Jgles2");
+    }    
     
     GLES2() {
         
