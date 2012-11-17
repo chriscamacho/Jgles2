@@ -339,34 +339,26 @@ public class GLES2 {
 
 
 
+
 /*
+ *          TODO
  * 
- *          these need special treatment and will possibly not be
- *          exactly like their C counter parts
- * 
- * 
-    void glGetActiveAttrib(int program, int index,int bufSize, 
-                    IntBuffer length, IntBuffer size, int *type, GLchar *name);
+    // need to see a working example of this...
+    void glGetVertexAttribPointerv(	int index,int pname,void **pointer)
 
-    void glGetActiveUniform (	int program,int index,int bufSize,IntBuffer length,
-                    IntBuffer size,int *type,GLchar *name) ;
+    public static native void glReadPixels(int x,int y,int width,int height,
+            int format,int type,ByteBuffer data);
 
-void glGetAttachedShaders(	int program,int maxCount,IntBuffer count,IntBuffer shaders) ;
+    public static native void glGetActiveUniform (int program,int index,int bufSize,
+                    IntBuffer length, IntBuffer size,int *type,GLchar *name) ;
 
-void glGetVertexAttribPointerv(	int index,
-int pname,
-void **pointer) ; // see how this works in C
+    public static native void glGetActiveAttrib(int program, int index,int bufSize, 
+                    IntBuffer length, IntBuffer size, IntBuffer type, String name);
 
-void glReadPixels(	int x,
-int y,
-int width,
-int height,
-int format,
-int type,
-void* data) ;  TODO best way to handle this
+    public static native void glGetAttachedShaders(	int program,int maxCount,IntBuffer count,IntBuffer shaders) ;
 */
 
-
+                    
     public static native int glGetAttribLocation(int program,String name);
     public static native void glGetBufferParameteriv(int target,int value,IntBuffer data);
     public static native int glGetError();
