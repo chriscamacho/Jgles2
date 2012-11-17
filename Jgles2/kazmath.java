@@ -20,6 +20,32 @@ public class kazmath {
     public static int POINT_BEHIND_PLANE        =   1;
     public static int POINT_ON_PLANE            =   2;
     
+    // quaternion
+    public static native FloatBuffer  kmQuaternionConjugate(FloatBuffer pOut,  FloatBuffer pIn); ///< Returns pOut, sets pOut to the conjugate of pIn
+    public static native float 	kmQuaternionDot( FloatBuffer q1,  FloatBuffer q2); ///< Returns the dot product of the 2 quaternions
+    public static native FloatBuffer kmQuaternionExp(FloatBuffer pOut,  FloatBuffer pIn); ///< Returns the exponential of the quaternion
+    public static native FloatBuffer kmQuaternionIdentity(FloatBuffer pOut);
+    public static native FloatBuffer kmQuaternionInverse(FloatBuffer pOut,
+											 FloatBuffer pIn);
+    public static native int kmQuaternionIsIdentity( FloatBuffer pIn);
+    public static native float kmQuaternionLength( FloatBuffer pIn);
+    public static native float kmQuaternionLengthSq( FloatBuffer pIn);
+    public static native FloatBuffer kmQuaternionLn(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmQuaternionMultiply(FloatBuffer pOut,  FloatBuffer q1,  FloatBuffer q2);
+    public static native FloatBuffer kmQuaternionNormalize(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmQuaternionRotationAxis(FloatBuffer pOut,  FloatBuffer pV, float angle);
+    public static native FloatBuffer kmQuaternionRotationMatrix(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmQuaternionRotationYawPitchRoll(FloatBuffer pOut, float yaw, float pitch, float roll);
+    public static native FloatBuffer kmQuaternionSlerp(FloatBuffer pOut,  FloatBuffer q1,  FloatBuffer q2, float t);
+    public static native void kmQuaternionToAxisAngle( FloatBuffer pIn, FloatBuffer pVector, FloatBuffer pAngle);
+    public static native FloatBuffer kmQuaternionScale(FloatBuffer pOut,  FloatBuffer pIn, float s);
+    public static native FloatBuffer kmQuaternionAssign(FloatBuffer pOut,  FloatBuffer pIn);
+    public static native FloatBuffer kmQuaternionAdd(FloatBuffer pOut,  FloatBuffer pQ1,  FloatBuffer pQ2);
+    public static native FloatBuffer kmQuaternionRotationBetweenVec3(FloatBuffer pOut,  FloatBuffer vec1,  FloatBuffer vec2,  FloatBuffer fallback);
+    public static native FloatBuffer kmQuaternionMultiplyVec3(FloatBuffer pOut,  FloatBuffer q,  FloatBuffer v);
+
+
+    
     // plane 
     public static native float kmPlaneDot(FloatBuffer pP, FloatBuffer pV);
     public static native float kmPlaneDotCoord(FloatBuffer pP, FloatBuffer pV);

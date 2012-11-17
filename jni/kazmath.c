@@ -10,6 +10,215 @@
 
 #include <assert.h>
 
+//kmQuaternion* const kmQuaternionConjugate(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionConjugate
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionConjugate(o,i);
+    return jo;    
+}
+
+//const kmScalar 	kmQuaternionDot(const kmQuaternion* q1, const kmQuaternion* q2);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmQuaternionDot
+  (JNIEnv *e, jclass c, jobject jq1, jobject jq2)
+{
+    kmQuaternion* q1 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq1);
+    kmQuaternion* q2 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq2);
+    return kmQuaternionDot(q1,q2);
+}
+
+//kmQuaternion* kmQuaternionExp(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionExp
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionExp(o,i);
+    return jo; 
+}
+
+//kmQuaternion* kmQuaternionIdentity(kmQuaternion* pOut);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionIdentity
+  (JNIEnv *e, jclass c, jobject jo)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternionIdentity(o);
+    return jo;
+}
+
+//kmQuaternion* kmQuaternionInverse(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionInverse
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionInverse(o,i);
+    return jo;    
+}
+
+//int kmQuaternionIsIdentity(const kmQuaternion* pIn);
+JNIEXPORT jint JNICALL Java_Jgles2_kazmath_kmQuaternionIsIdentity
+  (JNIEnv *e, jclass c, jobject ji)
+{
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmQuaternionIsIdentity(i);
+}
+
+//kmScalar kmQuaternionLength(const kmQuaternion* pIn);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmQuaternionLength
+  (JNIEnv *e, jclass c, jobject ji)
+{
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmQuaternionLength(i);    
+}
+
+//kmScalar kmQuaternionLengthSq(const kmQuaternion* pIn);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmQuaternionLengthSq
+  (JNIEnv *e, jclass c, jobject ji)
+{
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmQuaternionLengthSq(i);        
+}
+
+//kmQuaternion* kmQuaternionLn(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionLn
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionLn(o,i);
+    return jo;    
+}
+
+//kmQuaternion* kmQuaternionMultiply(kmQuaternion* pOut, const kmQuaternion* q1, const kmQuaternion* q2);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionMultiply
+  (JNIEnv *e, jclass c, jobject jo, jobject jq1, jobject jq2)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* q1 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq1);
+    kmQuaternion* q2 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq2);
+    kmQuaternionMultiply(o,q1,q2); 
+    return jo;       
+}
+
+//kmQuaternion* kmQuaternionNormalize(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionNormalize
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    return jo;    
+}
+
+//kmQuaternion* kmQuaternionRotationAxis(kmQuaternion* pOut, const struct kmVec3* pV, kmScalar angle);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionRotationAxis
+  (JNIEnv *e, jclass c, jobject jo, jobject jv, jfloat a)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv); 
+    kmQuaternionRotationAxis(o,v,a);
+    return jo;      
+}
+
+//kmQuaternion* kmQuaternionRotationMatrix(kmQuaternion* pOut, const struct kmMat3* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionRotationMatrix
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat3* i = (kmMat3*)(*e)->GetDirectBufferAddress(e, ji); 
+    kmQuaternionRotationMatrix(o,i);
+    return jo;  
+}
+
+//kmQuaternion* kmQuaternionRotationYawPitchRoll(kmQuaternion* pOut, kmScalar yaw, kmScalar pitch, kmScalar roll);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionRotationYawPitchRoll
+  (JNIEnv *e, jclass c, jobject jo, jfloat y, jfloat p, jfloat r)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternionRotationYawPitchRoll(o,y,p,r);
+    return jo;    
+}
+
+//kmQuaternion* kmQuaternionSlerp(kmQuaternion* pOut, const kmQuaternion* q1, const kmQuaternion* q2, kmScalar t);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionSlerp
+  (JNIEnv *e, jclass c, jobject jo, jobject jq1, jobject jq2, jfloat t)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* q1 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq1);
+    kmQuaternion* q2 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq2);
+    kmQuaternionSlerp(o,q1,q2,t);
+    return jo;    
+}
+
+//void kmQuaternionToAxisAngle(const kmQuaternion* pIn, struct kmVec3* pVector, kmScalar* pAngle);
+JNIEXPORT void JNICALL Java_Jgles2_kazmath_kmQuaternionToAxisAngle
+  (JNIEnv *e, jclass c, jobject ji, jobject jv, jobject ja)
+{
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    kmScalar* a = (kmScalar*)(*e)->GetDirectBufferAddress(e, ja);
+    kmQuaternionToAxisAngle(i,v,a);
+}
+
+//kmQuaternion* kmQuaternionScale(kmQuaternion* pOut, const kmQuaternion* pIn, kmScalar s);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionScale
+  (JNIEnv *e, jclass c, jobject jo, jobject ji, jfloat s)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionScale(o,i,s);
+    return jo;    
+}
+
+//kmQuaternion* kmQuaternionAssign(kmQuaternion* pOut, const kmQuaternion* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionAssign
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* i = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, ji);
+    kmQuaternionAssign(o,i);
+    return jo;    
+}
+
+//kmQuaternion* kmQuaternionAdd(kmQuaternion* pOut, const kmQuaternion* pQ1, const kmQuaternion* pQ2);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionAdd
+  (JNIEnv *e, jclass c, jobject jo, jobject jq1, jobject jq2)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* q1 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq1);
+    kmQuaternion* q2 = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq2);
+    kmQuaternionAdd(o,q1,q2);
+    return jo;        
+}
+
+//kmQuaternion* kmQuaternionRotationBetweenVec3(kmQuaternion* pOut, const struct kmVec3* vec1, const struct kmVec3* vec2, const struct kmVec3* fallback);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionRotationBetweenVec3
+  (JNIEnv *e, jclass c, jobject jo, jobject jv1, jobject jv2, jobject jf)
+{
+    kmQuaternion* o = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec3* v1 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec3* v2 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv2);
+    kmVec3* f = (kmVec3*)(*e)->GetDirectBufferAddress(e, jf);
+    kmQuaternionRotationBetweenVec3(o,v1,v2,f);
+    return jo;
+}
+
+//struct kmVec3* kmQuaternionMultiplyVec3(struct kmVec3* pOut, const kmQuaternion* q, const struct kmVec3* v);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionMultiplyVec3
+  (JNIEnv *e, jclass c, jobject jo, jobject jq, jobject jv)
+{
+    kmVec3* o = (kmVec3*)(*e)->GetDirectBufferAddress(e, jo);
+    kmQuaternion* q = (kmQuaternion*)(*e)->GetDirectBufferAddress(e, jq);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    kmQuaternionMultiplyVec3(o,q,v);
+    return jo;
+}
+
+
+
+
 //const kmScalar kmPlaneDot(const kmPlane* pP, const struct kmVec4* pV);
 JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmPlaneDot
   (JNIEnv *e, jclass c, jobject jp, jobject jv)
