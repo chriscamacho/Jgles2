@@ -7,8 +7,196 @@
 #include <mat4.h>
 #include <quaternion.h>
 #include <plane.h>
+#include <ray2.h>
 
 #include <assert.h>
+
+
+// kmVec4* kmVec4Fill(kmVec4* pOut, kmScalar x, kmScalar y, kmScalar z, kmScalar w);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Fill
+  (JNIEnv *e, jclass c, jobject jo, jfloat x, jfloat y, jfloat z, jfloat w)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4Fill(o,x,y,z,w);
+    return jo;
+}
+
+//kmVec4* kmVec4Add(kmVec4* pOut, const kmVec4* pV1, const kmVec4* pV2);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Add
+  (JNIEnv *e, jclass c, jobject jo, jobject jv1, jobject jv2)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* v1 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec4* v2 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv2);
+    kmVec4Add(o,v1,v2);
+    return jo;
+}
+
+//kmScalar kmVec4Dot(const kmVec4* pV1, const kmVec4* pV2);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmVec4Dot
+  (JNIEnv *e, jclass c, jobject jv1, jobject jv2)
+{
+    kmVec4* v1 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec4* v2 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv2);
+    return kmVec4Dot(v1,v2);
+}
+
+//kmScalar kmVec4Length(const kmVec4* pIn);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmVec4Length
+  (JNIEnv *e, jclass c, jobject ji)
+{
+    kmVec4* i = (kmVec4*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmVec4Length(i);    
+}
+
+//kmScalar kmVec4LengthSq(const kmVec4* pIn);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmVec4LengthSq
+  (JNIEnv *e, jclass c, jobject ji)
+{
+    kmVec4* i = (kmVec4*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmVec4LengthSq(i);
+}
+
+//kmVec4* kmVec4Lerp(kmVec4* pOut, const kmVec4* pV1, const kmVec4* pV2, kmScalar t);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Lerp
+  (JNIEnv *e, jclass c, jobject jo, jobject jv1, jobject jv2, jfloat t)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* v1 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec4* v2 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv2);
+    kmVec4Lerp(o,v1,v2,t);
+    return jo;    
+}
+
+//kmVec4* kmVec4Normalize(kmVec4* pOut, const kmVec4* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Normalize
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* i = (kmVec4*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec4Normalize(o,i);
+    return jo;        
+}
+
+//kmVec4* kmVec4Scale(kmVec4* pOut, const kmVec4* pIn, const kmScalar s);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Scale
+  (JNIEnv *e, jclass c, jobject jo, jobject ji, jfloat s)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* i = (kmVec4*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec4Scale(o,i,s);
+    return jo;    
+}
+
+//kmVec4* kmVec4Subtract(kmVec4* pOut, const kmVec4* pV1, const kmVec4* pV2);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Subtract
+  (JNIEnv *e, jclass c, jobject jo, jobject jv1, jobject jv2)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* v1 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec4* v2 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv2);
+    kmVec4Subtract(o,v1,v2);
+    return jo;    
+}
+
+//kmVec4* kmVec4Transform(kmVec4* pOut, const kmVec4* pV, const struct kmMat4* pM);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Transform
+  (JNIEnv *e, jclass c, jobject jo, jobject jv, jobject jm)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* v = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv);
+    kmMat4* m = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);
+    kmVec4Transform(o,v,m);
+    return jo;    
+}
+
+//kmVec4* kmVec4TransformArray(kmVec4* pOut, unsigned int outStride,
+//			const kmVec4* pV, unsigned int vStride, const struct kmMat4* pM, unsigned int count);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4TransformArray
+  (JNIEnv *e, jclass c, jobject jo, jint os, jobject jv, jint vs, jobject jm, jint cnt)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* v = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv);
+    kmMat4* m = (kmMat4*)(*e)->GetDirectBufferAddress(e, jm);
+    kmVec4TransformArray(o,os,v,vs,m,cnt);            
+}
+
+//int 	kmVec4AreEqual(const kmVec4* p1, const kmVec4* p2);
+JNIEXPORT jint JNICALL Java_Jgles2_kazmath_kmVec4AreEqual
+  (JNIEnv *e, jclass c, jobject jv1, jobject jv2)
+{
+    kmVec4* v1 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec4* v2 = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv2);
+    return kmVec4AreEqual(v1,v2);   
+}
+
+//kmVec4* kmVec4Assign(kmVec4* pOut, const kmVec4* pIn);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmVec4Assign
+  (JNIEnv *e, jclass c, jobject jo, jobject ji)
+{
+    kmVec4* o = (kmVec4*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec4* i = (kmVec4*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec4Assign(o,i);
+    return jo;    
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_kazmath_kmRay2Fill
+  (JNIEnv *e, jclass c, jobject jo, jfloat px, jfloat py, jfloat vx, jfloat vy)
+{
+    kmRay2* o = (kmRay2*)(*e)->GetDirectBufferAddress(e, jo);
+    kmRay2Fill(o,px,py,vx,vy);
+}
+
+//kmBool kmRay2IntersectLineSegment(const kmRay2* ray, const kmVec2* p1, const kmVec2* p2, kmVec2* intersection);
+JNIEXPORT jboolean JNICALL Java_Jgles2_kazmath_kmRay2IntersectLineSegment
+  (JNIEnv *e, jclass c, jobject jr, jobject jp1, jobject jp2, jobject ji)
+{
+    kmRay2* r = (kmRay2*)(*e)->GetDirectBufferAddress(e, jr);
+    kmVec2* p1 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp1);       
+    kmVec2* p2 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp2);
+    kmVec2* i = (kmVec2*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmRay2IntersectLineSegment(r,p1,p2,i);
+}
+
+//kmBool kmRay2IntersectTriangle(const kmRay2* ray, const kmVec2* p1, const kmVec2* p2, const kmVec2* p3, kmVec2* intersection,
+// kmVec2* normal_out, kmScalar* distance);
+JNIEXPORT jboolean JNICALL Java_Jgles2_kazmath_kmRay2IntersectTriangle
+  (JNIEnv *e, jclass c, jobject jr, jobject jp1, jobject jp2, jobject jp3, jobject ji, jobject jn, jobject jd)
+{
+    kmRay2* r = (kmRay2*)(*e)->GetDirectBufferAddress(e, jr);
+    kmVec2* p1 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp1);       
+    kmVec2* p2 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp2);
+    kmVec2* p3 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp3);
+    kmVec2* i = (kmVec2*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec2* n = (kmVec2*)(*e)->GetDirectBufferAddress(e, jn);
+    float* d = (float*)(*e)->GetDirectBufferAddress(e, jd);
+    return kmRay2IntersectTriangle(r,p1,p2,p3,i,n,d);
+}
+
+//kmBool kmRay2IntersectBox(const kmRay2* ray, const kmVec2* p1, const kmVec2* p2, const kmVec2* p3, const kmVec2* p4,
+// kmVec2* intersection, kmVec2* normal_out);
+JNIEXPORT jboolean JNICALL Java_Jgles2_kazmath_kmRay2IntersectBox
+  (JNIEnv *e, jclass c, jobject jr, jobject jp1, jobject jp2, jobject jp3, jobject jp4, jobject ji, jobject jn)
+{
+    kmRay2* r = (kmRay2*)(*e)->GetDirectBufferAddress(e, jr);
+    kmVec2* p1 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp1);       
+    kmVec2* p2 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp2);
+    kmVec2* p3 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp3);
+    kmVec2* p4 = (kmVec2*)(*e)->GetDirectBufferAddress(e, jp4);
+    kmVec2* i = (kmVec2*)(*e)->GetDirectBufferAddress(e, ji);
+    kmVec2* n = (kmVec2*)(*e)->GetDirectBufferAddress(e, jn);
+    return kmRay2IntersectBox(r,p1,p2,p3,p4,i,n);  
+}
+
+//kmBool kmRay2IntersectCircle(const kmRay2* ray, const kmVec2 centre, const kmScalar radius, kmVec2* intersection);
+JNIEXPORT jboolean JNICALL Java_Jgles2_kazmath_kmRay2IntersectCircle
+  (JNIEnv *e, jclass c, jobject jr, jobject jc, jfloat rd, jobject ji)
+{
+    kmRay2* r = (kmRay2*)(*e)->GetDirectBufferAddress(e, jr);
+    kmVec2* ct = (kmVec2*)(*e)->GetDirectBufferAddress(e, jc);
+    kmVec2* i = (kmVec2*)(*e)->GetDirectBufferAddress(e, ji);
+    return kmRay2IntersectCircle(r,*ct,rd,i);   
+}
 
 //kmQuaternion* const kmQuaternionConjugate(kmQuaternion* pOut, const kmQuaternion* pIn);
 JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmQuaternionConjugate
