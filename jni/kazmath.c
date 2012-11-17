@@ -2,12 +2,128 @@
 
 #include <aabb.h>
 #include <vec3.h>
+#include <vec4.h>
 #include <mat3.h>
 #include <mat4.h>
 #include <quaternion.h>
 #include <plane.h>
 
 #include <assert.h>
+
+//const kmScalar kmPlaneDot(const kmPlane* pP, const struct kmVec4* pV);
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmPlaneDot
+  (JNIEnv *e, jclass c, jobject jp, jobject jv)
+{
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);
+    kmVec4* v = (kmVec4*)(*e)->GetDirectBufferAddress(e, jv);
+    return kmPlaneDot(p,v);
+}
+
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmPlaneDotCoord
+  (JNIEnv *e, jclass c, jobject jp, jobject jv)
+{
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    return kmPlaneDotCoord(p,v);
+}
+
+JNIEXPORT jfloat JNICALL Java_Jgles2_kazmath_kmPlaneDotNormal
+  (JNIEnv *e, jclass c, jobject jp, jobject jv)
+{
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    return kmPlaneDotNormal(p,v);
+}
+
+//kmPlane* const kmPlaneFromPointNormal(kmPlane* pOut, const struct kmVec3* pPoint, const struct kmVec3* pNormal);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneFromPointNormal
+  (JNIEnv *e, jclass c, jobject jo, jobject jp, jobject jn)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec3* p = (kmVec3*)(*e)->GetDirectBufferAddress(e, jp);
+    kmVec3* n = (kmVec3*)(*e)->GetDirectBufferAddress(e, jn);
+    kmPlaneFromPointNormal(o,p,n);
+    return jo;
+}
+
+//kmPlane* const kmPlaneFromPoints(kmPlane* pOut, const struct kmVec3* p1, const struct kmVec3* p2, const struct kmVec3* p3);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneFromPoints
+  (JNIEnv *e, jclass c, jobject jo, jobject jp1, jobject jp2, jobject jp3)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec3* p1 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jp1);    
+    kmVec3* p2 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jp2);  
+    kmVec3* p3 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jp3);
+    kmPlaneFromPoints(o,p1,p2,p3);
+    return jo;  
+}
+
+//kmVec3*  const kmPlaneIntersectLine(struct kmVec3* pOut, const kmPlane* pP, const struct kmVec3* pV1, const struct kmVec3* pV2);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneIntersectLine
+  (JNIEnv *e, jclass c, jobject jo, jobject jp, jobject jv1, jobject jv2)
+{
+    kmVec3* o = (kmVec3*)(*e)->GetDirectBufferAddress(e, jo);
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);
+    kmVec3* v1 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv1);
+    kmVec3* v2 = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv2);
+    kmPlaneIntersectLine(o,p,v1,v2);
+    return jo;
+}
+
+//kmPlane* const kmPlaneNormalize(kmPlane* pOut, const kmPlane* pP);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneNormalize
+  (JNIEnv *e, jclass c, jobject jo, jobject jp)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);    
+    kmPlaneNormalize(o,p);
+    return jo;
+}
+
+//kmPlane* const kmPlaneScale(kmPlane* pOut, const kmPlane* pP, kmScalar s);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneScale
+  (JNIEnv *e, jclass c, jobject jo, jobject jp, jfloat s)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmPlane* p = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp);
+    kmPlaneScale(o,p,s);
+    return jo;
+}
+
+//const POINT_CLASSIFICATION kmPlaneClassifyPoint(const kmPlane* pIn, const kmVec3* pP);
+JNIEXPORT jint JNICALL Java_Jgles2_kazmath_kmPlaneClassifyPoint
+  (JNIEnv *e, jclass c, jobject jo, jobject jv)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmVec3* v = (kmVec3*)(*e)->GetDirectBufferAddress(e, jv);
+    return kmPlaneClassifyPoint(o,v);
+}
+
+//kmPlane* kmPlaneExtractFromMat4(kmPlane* pOut, const struct kmMat4* pIn, kmInt row);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneExtractFromMat4
+  (JNIEnv *e, jclass c, jobject jo, jobject ji, jint r)
+{
+    kmPlane* o = (kmPlane*)(*e)->GetDirectBufferAddress(e, jo);
+    kmMat4* i = (kmMat4*)(*e)->GetDirectBufferAddress(e, ji);
+    kmPlaneExtractFromMat4(o,i,r);
+    return jo;
+}
+
+//kmVec3* kmPlaneGetIntersection(kmVec3* pOut, const kmPlane* p1, const kmPlane* p2, const kmPlane* p3);
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmPlaneGetIntersection
+  (JNIEnv *e, jclass c, jobject jo, jobject jp1, jobject jp2, jobject jp3)
+{
+    kmVec3* o = (kmVec3*)(*e)->GetDirectBufferAddress(e, jo);
+    kmPlane* p1 = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp1);
+    kmPlane* p2 = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp2);
+    kmPlane* p3 = (kmPlane*)(*e)->GetDirectBufferAddress(e, jp3);
+    kmPlaneGetIntersection(o,p1,p2,p3);
+    return jo;
+}
+
+
+
+
 
 //kmMat3* const kmMat3Fill(kmMat3* pOut, const kmScalar* pMat);
 JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat3Fill

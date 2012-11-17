@@ -15,6 +15,24 @@ public class kazmath {
     public static int KM_PLANE_TOP      =   3;
     public static int KM_PLANE_NEAR     =   4;
     public static int KM_PLANE_FAR      =   5;
+    
+    public static int POINT_INFRONT_OF_PLANE    =   0;
+    public static int POINT_BEHIND_PLANE        =   1;
+    public static int POINT_ON_PLANE            =   2;
+    
+    // plane 
+    public static native float kmPlaneDot(FloatBuffer pP, FloatBuffer pV);
+    public static native float kmPlaneDotCoord(FloatBuffer pP, FloatBuffer pV);
+    public static native float kmPlaneDotNormal(FloatBuffer pP, FloatBuffer pV);
+    public static native FloatBuffer kmPlaneFromPointNormal(FloatBuffer pOut, FloatBuffer pPoint, FloatBuffer pNormal);
+    public static native FloatBuffer kmPlaneFromPoints(FloatBuffer pOut, FloatBuffer p1, FloatBuffer p2, FloatBuffer p3);
+    public static native FloatBuffer kmPlaneIntersectLine(FloatBuffer pOut, FloatBuffer pP, FloatBuffer pV1, FloatBuffer pV2);
+    public static native FloatBuffer kmPlaneNormalize(FloatBuffer pOut, FloatBuffer pP);
+    public static native FloatBuffer kmPlaneScale(FloatBuffer pOut, FloatBuffer pP, float s);
+    public static native int kmPlaneClassifyPoint(FloatBuffer pIn,FloatBuffer pP);
+
+    public static native FloatBuffer kmPlaneExtractFromMat4(FloatBuffer pOut, FloatBuffer pIn, int row);
+    public static native FloatBuffer kmPlaneGetIntersection(FloatBuffer pOut, FloatBuffer p1, FloatBuffer p2, FloatBuffer p3);
 
     // mat3
     
