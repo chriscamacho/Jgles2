@@ -63,18 +63,23 @@ Porting - you can help
 If you want to port Jgles to your platform (it would certainly be
 apreciated) I have marked any platform specific with #ifdef XORG
 
-Currently there are just 3 critical sections
+Currently there are just 4 critical sections
 
 get_native_display() - returns the native handle used to create the EGL
 display handle
 
-    make_native_window(
-                    native_display,     the native display handle
-                    egl_display         the EGL display handle
-                    config              the chosen EGL config
-                    x, y,               position on the screen
-                    width, height,      width/height of window 
-                    fullscreen)         should it be fullscreen without decoration
+make_native_window(
+            native_display,     the native display handle
+            egl_display         the EGL display handle
+            config              the chosen EGL config
+            x, y,               position on the screen
+            width, height,      width/height of window 
+            fullscreen)         should it be fullscreen without decoration
+
+setFullscreen(
+            native_display,
+            native_window,
+            full)              boolean true for fullscreen false for windowed.
     
 
 pumpEvents(native_Display,native_window)
@@ -84,11 +89,13 @@ and notifying the application that the screen needs resizing
 its is responsible for modifying the following global variables
 the jni wrapper uses.
 
-        bool __keys[256];       keydown flags
-        int __mouse[3];         x,y,buttons
-        bool __resize=false;    resize needed
-        int __width,__height;   when resized the dimensions are stored here.
+        bool __keys[256]        keydown flags
+        int  __mouse[3]         x,y,buttons
+        bool __resize           resize needed
+        int  __width,__height   when resized the dimensions are stored here.
 
+(none XORG platforms must translate their keycodes to match the codes in
+the util class ( KEY_* )
 
 
 
