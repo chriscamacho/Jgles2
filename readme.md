@@ -68,24 +68,28 @@ Currently there are just 4 critical sections
 get_native_display() - returns the native handle used to create the EGL
 display handle
 
-        make_native_window(
-        native_display,     the native display handle
+make_native_window
+        native_display      the native display handle
         egl_display         the EGL display handle
         config              the chosen EGL config
-        x, y,               position on the screen
-        width, height,      width/height of window 
-        fullscreen)         should it be fullscreen without decoration
+        x, y                position on the screen
+        width, height       width/height of window 
+        fullscreen          should it be fullscreen without decoration
 
 
 
-        setFullscreen(
-        native_display,
-        native_window,
-        full)              boolean true for fullscreen false for windowed.
+setFullscreen
+        native_display
+        native_window
+        full               boolean true for fullscreen false for windowed.
 
     
 
-        pumpEvents(native_Display,native_window)
+pumpEvents
+        native_Display
+        native_window
+
+
 
 this is resposible for collection keyboard and mouse events
 and notifying the application that the screen needs resizing
