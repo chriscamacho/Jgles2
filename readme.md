@@ -65,8 +65,8 @@ apreciated) I have marked any platform specific with #ifdef XORG
 
 Currently there are just 4 critical sections
 
-get_native_display() - returns the native handle used to create the EGL
-display handle
+get_native_display
+        returns the native handle used to create the EGL display handle
 
 make_native_window
 
