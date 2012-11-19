@@ -69,6 +69,7 @@ get_native_display() - returns the native handle used to create the EGL
 display handle
 
 make_native_window
+
         native_display      the native display handle
         egl_display         the EGL display handle
         config              the chosen EGL config
@@ -79,6 +80,7 @@ make_native_window
 
 
 setFullscreen
+
         native_display
         native_window
         full               boolean true for fullscreen false for windowed.
@@ -86,6 +88,7 @@ setFullscreen
     
 
 pumpEvents
+
         native_Display
         native_window
 
