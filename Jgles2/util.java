@@ -132,7 +132,7 @@ public class util {
 
 
 
-
+    public static native void setFullscreen(long native_display,long native_window,boolean full);
     public static native long get_native_display();
     public static native long make_native_window(long native_display,
                             long egl_display, long config, int x, int y, 

@@ -22,6 +22,31 @@ int __mouse[3]; // TODO implement java access routines for this...
 bool __resize=false;
 int __width,__height;
 
+JNIEXPORT void JNICALL Java_Jgles2_util_setFullscreen
+  (JNIEnv *e, jclass c, jlong d,jlong w, jboolean f)
+{
+    #ifdef XORG
+    XEvent xev;
+    Atom wm_state = XInternAtom((Display*)d, "_NET_WM_STATE", False);
+    Atom fullscreenA = XInternAtom((Display*)d, "_NET_WM_STATE_FULLSCREEN", False);
+
+    memset(&xev, 0, sizeof(xev));
+    xev.type = ClientMessage;
+    xev.xclient.window = w;
+    xev.xclient.message_type = wm_state;
+    xev.xclient.format = 32;
+    xev.xclient.data.l[0] = f;
+    xev.xclient.data.l[1] = fullscreenA;
+    xev.xclient.data.l[2] = None;
+    xev.xclient.data.l[3] = 1;
+    xev.xclient.data.l[4] = 0;
+
+    XSendEvent((Display*)d, DefaultRootWindow((Display*)d), False,
+        SubstructureRedirectMask | SubstructureNotifyMask, &xev);       
+    #endif
+}
+
+
 JNIEXPORT jint JNICALL Java_Jgles2_util_getMouseButtons
   (JNIEnv *e, jclass c)
 {

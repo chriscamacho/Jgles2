@@ -55,7 +55,7 @@ public class test {
         // val is a integer intBuffer which is reused for various int return values
         IntBuffer val = util.createIntBuffer(2);
         
-        int config_size=1; // wouldn't normally check that many - just for testing!
+        int config_size=1;
         LongBuffer configsBuffer = util.createLongBuffer(config_size);
         
         if (!EGL.eglChooseConfig(egl_display, attribsBuffer,
@@ -315,6 +315,8 @@ public class test {
  
  
         float frame=0;
+        boolean lastf=false;
+        boolean fs=false;
         while( !util.keyDown(util.KEY_ESC) ) {
             frame++;
 
@@ -387,6 +389,14 @@ public class test {
 
             // updates the keyboard and services window events
             util.pumpEvents(native_display,native_win);
+            
+            if (lastf!=util.keyDown(util.KEY_F)) {
+                if (util.keyDown(util.KEY_F)) {
+                    fs=!fs;
+                    util.setFullscreen(native_display,native_win,fs);
+                }
+            }
+            lastf=util.keyDown(util.KEY_F);
             
             if (util.resizeRequired()) {
                 // if the screen is resized then the projection
