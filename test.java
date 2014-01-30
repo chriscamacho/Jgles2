@@ -93,6 +93,7 @@ public class test {
         // the shader is shared by both renderings
         // combines vertex colour with a texture
         String fragShaderText =
+			"precision mediump float;\n"+
             "uniform sampler2D u_texture;\n"+
             "varying vec4 v_color;\n"+
             "varying vec2 v_frag_uv; \n"+
