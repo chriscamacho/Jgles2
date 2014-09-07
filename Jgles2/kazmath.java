@@ -83,7 +83,7 @@ public class kazmath {
     public static native FloatBuffer kmMat3Fill(FloatBuffer pOut,  FloatBuffer pMat);
     public static native FloatBuffer kmMat3Adjugate(FloatBuffer pOut,  FloatBuffer pIn);
     public static native FloatBuffer kmMat3Identity(FloatBuffer pOut);
-    public static native FloatBuffer kmMat3Inverse(FloatBuffer pOut,  float pDeterminate,  FloatBuffer pM);
+    public static native FloatBuffer kmMat3Inverse(FloatBuffer pOut,  FloatBuffer pM);
     public static native int kmMat3IsIdentity( FloatBuffer pIn);
     public static native FloatBuffer kmMat3Transpose(FloatBuffer pOut,  FloatBuffer pIn);
     public static native float kmMat3Determinant( FloatBuffer pIn);
@@ -127,7 +127,8 @@ public class kazmath {
     public static native FloatBuffer kmMat4RotationX(FloatBuffer mat, float rad);
     public static native FloatBuffer kmMat4RotationY(FloatBuffer mat, float rad);
     public static native FloatBuffer kmMat4RotationZ(FloatBuffer mat, float rad);
-    public static native FloatBuffer kmMat4RotationPitchYawRoll(FloatBuffer mat, float x, float y, float z);
+    public static native FloatBuffer kmMat4RotationYawPitchRoll(FloatBuffer mat, float p, float y, float r);
+
     public static native FloatBuffer kmMat4RotationQuaternion(FloatBuffer pOut, FloatBuffer pQ);
     public static native FloatBuffer kmMat4RotationTranslation(FloatBuffer pOut, FloatBuffer rotation,  FloatBuffer translation);
     public static native FloatBuffer kmMat4Scaling(FloatBuffer pOut, float  x, float  y, float  z);

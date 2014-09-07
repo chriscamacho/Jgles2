@@ -31,9 +31,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "plane.h"
 #include "mat4.h"
 
-const kmScalar kmPlaneDot(const kmPlane* pP, const kmVec4* pV)
+kmScalar kmPlaneDot(const kmPlane* pP, const kmVec4* pV)
 {
-    //a*x + b*y + c*z + d*w
+    /*a*x + b*y + c*z + d*w*/
 
     return (pP->a * pV->x +
 	    pP->b * pV->y +
@@ -41,21 +41,30 @@ const kmScalar kmPlaneDot(const kmPlane* pP, const kmVec4* pV)
 	    pP->d * pV->w);
 }
 
-const kmScalar kmPlaneDotCoord(const kmPlane* pP, const kmVec3* pV)
+kmScalar kmPlaneDotCoord(const kmPlane* pP, const kmVec3* pV)
 {
     return (pP->a * pV->x +
 	    pP->b * pV->y +
 	    pP->c * pV->z + pP->d);
 }
 
-const kmScalar kmPlaneDotNormal(const kmPlane* pP, const kmVec3* pV)
+kmScalar kmPlaneDotNormal(const kmPlane* pP, const kmVec3* pV)
 {
     return (pP->a * pV->x +
 	    pP->b * pV->y +
 	    pP->c * pV->z);
 }
 
-kmPlane* const kmPlaneFromPointNormal(kmPlane* pOut, const kmVec3* pPoint, const kmVec3* pNormal)
+kmPlane* kmPlaneFromNormalAndDistance(kmPlane* plane, const struct kmVec3* normal, const kmScalar dist) {
+    plane->a = normal->x;
+    plane->b = normal->y;
+    plane->c = normal->z;
+    plane->d = dist;
+
+    return plane;
+}
+
+kmPlane* kmPlaneFromPointAndNormal(kmPlane* pOut, const kmVec3* pPoint, const kmVec3* pNormal)
 {
     /*
 	Planea = Nx
@@ -77,7 +86,7 @@ kmPlane* const kmPlaneFromPointNormal(kmPlane* pOut, const kmVec3* pPoint, const
  * Creates a plane from 3 points. The result is stored in pOut.
  * pOut is returned.
  */
-kmPlane* const kmPlaneFromPoints(kmPlane* pOut, const kmVec3* p1, const kmVec3* p2, const kmVec3* p3)
+kmPlane* kmPlaneFromPoints(kmPlane* pOut, const kmVec3* p1, const kmVec3* p2, const kmVec3* p3)
 {
     /*
     v = (B − A) × (C − A)
@@ -89,11 +98,11 @@ kmPlane* const kmPlaneFromPoints(kmPlane* pOut, const kmVec3* p1, const kmVec3* 
     */
 
     kmVec3 n, v1, v2;
-    kmVec3Subtract(&v1, p2, p1); //Create the vectors for the 2 sides of the triangle
+    kmVec3Subtract(&v1, p2, p1); /*Create the vectors for the 2 sides of the triangle*/
     kmVec3Subtract(&v2, p3, p1);
-    kmVec3Cross(&n, &v1, &v2); //Use the cross product to get the normal
+    kmVec3Cross(&n, &v1, &v2); /*Use the cross product to get the normal*/
 
-    kmVec3Normalize(&n, &n); //Normalize it and assign to pOut->m_N
+    kmVec3Normalize(&n, &n); /*Normalize it and assign to pOut->m_N*/
 
     pOut->a = n.x;
     pOut->b = n.y;
@@ -103,33 +112,40 @@ kmPlane* const kmPlaneFromPoints(kmPlane* pOut, const kmVec3* p1, const kmVec3* 
     return pOut;
 }
 
-kmVec3* const kmPlaneIntersectLine(kmVec3* pOut, const kmPlane* pP, const kmVec3* pV1, const kmVec3* pV2)
+/* Added by tlensing (http://icedcoffee-framework.org)*/
+kmVec3* kmPlaneIntersectLine(kmVec3* pOut, const kmPlane* pP, const kmVec3* pV1, const kmVec3* pV2)
 {
     /*
-	    n = (Planea, Planeb, Planec)
-	    d = V − U
-	    Out = U − d⋅(Pd + n⋅U)⁄(d⋅n) [iff d⋅n ≠ 0]
-    */
-    kmVec3 d;
-    assert(0 && "Not implemented");
-
-
-    kmVec3Subtract(&d, pV2, pV1); //Get the direction vector
-
-
-    //TODO: Continue here!
-    /*if (fabs(kmVec3Dot(&pP->m_N, &d)) > kmEpsilon)
-    {
-	    //If we get here then the plane and line are parallel (i.e. no intersection)
-	    pOut = nullptr; //Set to nullptr
-
-	    return pOut;
-    } */
-
-    return NULL;
+     n = (Planea, Planeb, Planec)
+     d = V − U
+     Out = U − d⋅(Pd + n⋅U)⁄(d⋅n) [iff d⋅n ≠ 0]
+     */
+    kmVec3 d; /* direction from V1 to V2*/
+    kmVec3Subtract(&d, pV2, pV1); /* Get the direction vector*/
+    
+    kmVec3 n; /* plane normal*/
+    n.x = pP->a;
+    n.y = pP->b;
+    n.z = pP->c;
+    kmVec3Normalize(&n, &n);
+    
+    kmScalar nt = -(n.x * pV1->x + n.y * pV1->y + n.z * pV1->z + pP->d);
+    kmScalar dt = (n.x * d.x + n.y * d.y + n.z * d.z);
+    
+    if (fabs(dt) < kmEpsilon) {
+        pOut = NULL;
+        return pOut; /* line parallel or contained*/
+    }
+    
+    kmScalar t = nt/dt;
+    pOut->x = pV1->x + d.x * t;
+    pOut->y = pV1->y + d.y * t;
+    pOut->z = pV1->z + d.z * t;
+    
+    return pOut;
 }
 
-kmPlane* const kmPlaneNormalize(kmPlane* pOut, const kmPlane* pP)
+kmPlane* kmPlaneNormalize(kmPlane* pOut, const kmPlane* pP)
 {
 	kmVec3 n;
         kmScalar l = 0;
@@ -146,19 +162,19 @@ kmPlane* const kmPlaneNormalize(kmPlane* pOut, const kmPlane* pP)
 	n.y = pP->b;
 	n.z = pP->c;
 
-	l = 1.0f / kmVec3Length(&n); //Get 1/length
-	kmVec3Normalize(&n, &n); //Normalize the vector and assign to pOut
+	l = 1.0f / kmVec3Length(&n); /*Get 1/length*/
+	kmVec3Normalize(&n, &n); /*Normalize the vector and assign to pOut*/
 
 	pOut->a = n.x;
 	pOut->b = n.y;
 	pOut->c = n.z;
 
-	pOut->d = pP->d * l; //Scale the D value and assign to pOut
+	pOut->d = pP->d * l; /*Scale the D value and assign to pOut*/
 
 	return pOut;
 }
 
-kmPlane* const kmPlaneScale(kmPlane* pOut, const kmPlane* pP, kmScalar s)
+kmPlane* kmPlaneScale(kmPlane* pOut, const kmPlane* pP, kmScalar s)
 {
 	assert(0 && "Not implemented");
     return NULL;
@@ -168,16 +184,16 @@ kmPlane* const kmPlaneScale(kmPlane* pOut, const kmPlane* pP, kmScalar s)
  * Returns POINT_INFRONT_OF_PLANE if pP is infront of pIn. Returns
  * POINT_BEHIND_PLANE if it is behind. Returns POINT_ON_PLANE otherwise
  */
-const POINT_CLASSIFICATION kmPlaneClassifyPoint(const kmPlane* pIn, const kmVec3* pP)
+KM_POINT_CLASSIFICATION kmPlaneClassifyPoint(const kmPlane* pIn, const kmVec3* pP)
 {
-   // This function will determine if a point is on, in front of, or behind
-   // the plane.  First we store the dot product of the plane and the point.
+   /* This function will determine if a point is on, in front of, or behind*/
+   /* the plane.  First we store the dot product of the plane and the point.*/
    kmScalar distance = pIn->a * pP->x + pIn->b * pP->y + pIn->c * pP->z + pIn->d;
 
-   // Simply put if the dot product is greater than 0 then it is infront of it.
-   // If it is less than 0 then it is behind it.  And if it is 0 then it is on it.
-   if(distance > 0.001) return POINT_INFRONT_OF_PLANE;
-   if(distance < -0.001) return POINT_BEHIND_PLANE;
+   /* Simply put if the dot product is greater than 0 then it is infront of it.*/
+   /* If it is less than 0 then it is behind it.  And if it is 0 then it is on it.*/
+   if(distance > kmEpsilon) return POINT_INFRONT_OF_PLANE;
+   if(distance < -kmEpsilon) return POINT_BEHIND_PLANE;
 
    return POINT_ON_PLANE;
 }
@@ -223,8 +239,16 @@ kmVec3* kmPlaneGetIntersection(kmVec3* pOut, const kmPlane* p1, const kmPlane* p
     kmVec3Subtract(pOut, pOut, &r3);
     kmVec3Scale(pOut, pOut, 1.0 / denom);
 
-    //p = -d1 * ( n2.Cross ( n3 ) ) – d2 * ( n3.Cross ( n1 ) ) – d3 * ( n1.Cross ( n2 ) ) / denom;
+    /*p = -d1 * ( n2.Cross ( n3 ) ) – d2 * ( n3.Cross ( n1 ) ) – d3 * ( n1.Cross ( n2 ) ) / denom;*/
 
     return pOut;
 }
 
+kmPlane* kmPlaneFill(kmPlane* plane, kmScalar a, kmScalar b, kmScalar c, kmScalar d) {
+    plane->a = a;
+    plane->b = b;
+    plane->c = c;
+    plane->d = d;
+
+    return plane;
+}

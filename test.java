@@ -246,6 +246,7 @@ public class test {
         // model, the mvp matrix is the final matrix used by the shader
         FloatBuffer model = util.createFloatBuffer(16);
         FloatBuffer mvp = util.createFloatBuffer(16);
+        FloatBuffer pyr = util.createFloatBuffer(16);
 
 
 
@@ -291,21 +292,24 @@ public class test {
                 textureBuffer=null;
                 pixels=null;
         
-        
+        // end of section that should be a util routine
         
         
                      
         // set up for RTT
         ByteBuffer rttBB = util.createByteBuffer(128*128*3);
-        glGenFramebuffers(1, val);    int rttframebuff = val.get(0);
-        glGenTextures(1, val);        int rtt = val.get(0);
+        glGenFramebuffers(1, val);
+        int rttframebuff = val.get(0);
+        glGenTextures(1, val);
+        int rtt = val.get(0);
         glBindTexture(GL_TEXTURE_2D, rtt);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 128, 128, 0, GL_RGB,
                 GL_UNSIGNED_BYTE, rttBB);
          
-        glGenRenderbuffers(1, val);    int rttrendbuff = val.get(0);
+        glGenRenderbuffers(1, val);
+        int rttrendbuff = val.get(0);
         glBindRenderbuffer(GL_RENDERBUFFER, rttrendbuff);
         glBindFramebuffer(GL_FRAMEBUFFER, rttframebuff);
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,rtt,0);            
@@ -328,7 +332,7 @@ public class test {
             glBindTexture(GL_TEXTURE_2D, texture);             
             glViewport(0, 0, 128,128);
             kazmath.kmMat4Identity(mvp);
-            kazmath.kmMat4RotationPitchYawRoll(mvp,0,0,frame/30f);
+            kazmath.kmMat4RotationYawPitchRoll(mvp,0,0,frame/30f);
             glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -362,9 +366,10 @@ public class test {
                 kazmath.kmMat4Translation(model,0,0,-4+((float)Math.sin(frame/80f)*2f));  
             }
             if (!util.keyDown(util.KEY_SPACE)) {                     
-                kazmath.kmMat4RotationPitchYawRoll(model,  frame/100f,
+                kazmath.kmMat4RotationYawPitchRoll(pyr,  frame/100f,
                                                         frame/120f,
                                                         frame/130f);
+                kazmath.kmMat4Multiply(model,model,pyr);  
             }
             kazmath.kmMat4Multiply(mvp,vp,model);
             glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mvp);

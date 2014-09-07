@@ -46,14 +46,24 @@ kmScalar kmRadiansToDegrees(kmScalar radians) {
 	return radians * kmPIUnder180;
 }
 
-kmScalar min(kmScalar lhs, kmScalar rhs) {
+kmScalar kmMin(kmScalar lhs, kmScalar rhs) {
     return (lhs < rhs)? lhs : rhs;
 }
 
-kmScalar max(kmScalar lhs, kmScalar rhs) {
+kmScalar kmMax(kmScalar lhs, kmScalar rhs) {
     return (lhs > rhs)? lhs : rhs;
 }
 
 kmBool kmAlmostEqual(kmScalar lhs, kmScalar rhs) {
     return (lhs + kmEpsilon > rhs && lhs - kmEpsilon < rhs);
+}
+
+kmScalar kmClamp(kmScalar x, kmScalar min, kmScalar max)
+{
+    return x < min ? min : (x > max ? max : x);
+}
+
+kmScalar kmLerp(kmScalar x, kmScalar y, kmScalar t )
+{
+    return x + t * ( y - x );
 }

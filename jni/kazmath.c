@@ -552,11 +552,11 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat3Identity
 
 //kmMat3* const kmMat3Inverse(kmMat3* pOut, const kmScalar pDeterminate, const kmMat3* pM);
 JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat3Inverse
-  (JNIEnv *e, jclass c, jobject jo, jfloat d, jobject jm)
+  (JNIEnv *e, jclass c, jobject jo, jobject jm)
 {
     kmMat3* o = (kmMat3*)(*e)->GetDirectBufferAddress(e, jo);    
     kmMat3* m = (kmMat3*)(*e)->GetDirectBufferAddress(e, jm);  
-    kmMat3Inverse(o,d,m);
+    kmMat3Inverse(o,m);
     return jo;  
 }
 
@@ -1077,11 +1077,11 @@ JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationZ
     return m;
 }
 
-JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationPitchYawRoll
-  (JNIEnv *e, jclass c, jobject m, jfloat x, jfloat y, jfloat z)
+JNIEXPORT jobject JNICALL Java_Jgles2_kazmath_kmMat4RotationYawPitchRoll
+  (JNIEnv *e, jclass c, jobject m, jfloat p, jfloat y, jfloat r)
 {
     kmMat4* mat = (kmMat4*)(*e)->GetDirectBufferAddress(e, m);
-    kmMat4RotationPitchYawRoll(mat,x,y,z);
+    kmMat4RotationYawPitchRoll(mat,p,y,r);
     return m;
 }
 

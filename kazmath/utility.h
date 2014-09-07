@@ -65,9 +65,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define KM_TRUE 1
 #endif
 
-#define kmPI 3.141592f
-#define kmPIOver180 0.017453f //  PI / 180
-#define kmPIUnder180 57.295779f // 180 / PI
+#define kmPI 3.14159265358979323846f
+#define kmPIOver180  (kmPI / 180.0f)
+#define kmPIUnder180 (180.0 / kmPI)
 #define kmEpsilon 0.0001
 
 #define KM_CONTAINS_NONE 0
@@ -82,9 +82,12 @@ extern kmScalar kmSQR(kmScalar s);
 extern kmScalar kmDegreesToRadians(kmScalar degrees);
 extern kmScalar kmRadiansToDegrees(kmScalar radians);
 
-extern kmScalar min(kmScalar lhs, kmScalar rhs);
-extern kmScalar max(kmScalar lhs, kmScalar rhs);
+extern kmScalar kmMin(kmScalar lhs, kmScalar rhs);
+extern kmScalar kmMax(kmScalar lhs, kmScalar rhs);
 extern kmBool kmAlmostEqual(kmScalar lhs, kmScalar rhs);
+
+extern kmScalar kmClamp(kmScalar x, kmScalar min, kmScalar max);
+extern kmScalar kmLerp(kmScalar x, kmScalar y, kmScalar factor);
 
 #ifdef __cplusplus
 }

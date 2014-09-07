@@ -37,7 +37,7 @@ Jgles2.EGL     access to libEGL
 
 Jgles2.GLES2   access to libGLES v2.0
 
-Jgles2.Kazmath  I might breakout kazmath from the util class
+Jgles2.Kazmath subset of kazmath math lib (TODO "new" ray3)
 
 
 
@@ -51,10 +51,10 @@ Its fairly close but there are some slight differences for convenience
 So is it ready to rock and roll ?
 ---------------------------------
 
-...well close(ish) at the moment the test class shows a single triangle
-rotating and moving in a 3d view and exits when the escape key is pressed
-there is mouse handling too as well as support for window resizing
-
+...well very close! At the moment the demo show swapping between fullscreen
+and windowed mode on the fly.  Texture from png's, shaders and even render to
+texture in addition the demo moves the view depending on mouse position / button
+press.  There are over 100 GLES functions wrapped as lightly as possible 
 
 
 Porting - you can help
@@ -94,7 +94,6 @@ pumpEvents
         native_window
 
 
-
 this is resposible for collection keyboard and mouse events
 and notifying the application that the screen needs resizing
 its is responsible for modifying the following global variables
@@ -109,9 +108,14 @@ the jni wrapper uses.
 the util class ( KEY_* )
 
 
+I'd like to colaborate with someone to turn this into a Linux "driver" and also
+provide a windows driver (Sadly I'm not clever enough to do windows development)
+
+
 
 I'd like to chat to talk about how I might help?
 ------------------------------------------------
 
-my email account is codifies with googles mail service.
+my email account is codifies with a co uk domain of bedroomcoders, what will we do when
+spam bots can work that one out...
  

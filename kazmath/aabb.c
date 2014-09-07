@@ -25,11 +25,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "aabb.h"
 
+
+/**
+    Initializes the AABB around a central point. If centre is NULL then the origin
+    is used. Returns pBox.
+*/
+kmAABB* kmAABBInitialize(kmAABB* pBox, const kmVec3* centre, const kmScalar width, const kmScalar height, const kmScalar depth) {
+    if(!pBox) return 0;
+    
+    kmVec3 origin;
+    kmVec3* point = centre ? (kmVec3*) centre : &origin;
+    kmVec3Zero(&origin);
+    
+    pBox->min.x = point->x - (width / 2);
+    pBox->min.y = point->y - (height / 2);
+    pBox->min.z = point->z - (depth / 2);
+    
+    pBox->max.x = point->x + (width / 2);
+    pBox->max.y = point->y + (height / 2);
+    pBox->max.z = point->z + (depth / 2);
+    
+    return pBox;
+}
+
 /**
  * Returns KM_TRUE if point is in the specified AABB, returns
  * KM_FALSE otherwise.
  */
-const int kmAABBContainsPoint(const kmAABB* pBox, const kmVec3* pPoint)
+int kmAABBContainsPoint(const kmAABB* pBox, const kmVec3* pPoint)
 {
     if(pPoint->x >= pBox->min.x && pPoint->x <= pBox->max.x &&
        pPoint->y >= pBox->min.y && pPoint->y <= pBox->max.y &&
@@ -43,7 +66,7 @@ const int kmAABBContainsPoint(const kmAABB* pBox, const kmVec3* pPoint)
 /**
  * Assigns pIn to pOut, returns pOut.
  */
-kmAABB* const kmAABBAssign(kmAABB* pOut, const kmAABB* pIn)
+kmAABB* kmAABBAssign(kmAABB* pOut, const kmAABB* pIn)
 {
     kmVec3Assign(&pOut->min, &pIn->min);
     kmVec3Assign(&pOut->max, &pIn->max);
@@ -53,9 +76,10 @@ kmAABB* const kmAABBAssign(kmAABB* pOut, const kmAABB* pIn)
 /**
  * Scales pIn by s, stores the resulting AABB in pOut. Returns pOut
  */
-kmAABB* const kmAABBScale(kmAABB* pOut, const kmAABB* pIn, kmScalar s)
+kmAABB* kmAABBScale(kmAABB* pOut, const kmAABB* pIn, kmScalar s)
 {
 	assert(0 && "Not implemented");
+    return pOut;
 }
 
 kmBool kmAABBIntersectsTriangle(kmAABB* box, const kmVec3* p1, const kmVec3* p2, const kmVec3* p3) {
@@ -81,8 +105,8 @@ kmEnum kmAABBContainsAABB(const kmAABB* container, const kmAABB* to_check) {
         if(!kmAABBContainsPoint(container, &corners[i])) {
             result = KM_CONTAINS_PARTIAL;
             if(found) {
-                //If we previously found a corner that was within the container
-                //We know that partial is the final result
+                /*If we previously found a corner that was within the container*/
+                /*We know that partial is the final result*/
                 return result;
             }
         } else {
@@ -107,4 +131,32 @@ kmScalar kmAABBDiameterY(const kmAABB* aabb) {
 
 kmScalar kmAABBDiameterZ(const kmAABB* aabb) {
     return fabs(aabb->max.z - aabb->min.z);
+}
+
+kmVec3* kmAABBCentre(const kmAABB* aabb, kmVec3* pOut) {
+    kmVec3Add(pOut, &aabb->min, &aabb->max);
+    kmVec3Scale(pOut, pOut, 0.5);
+    return pOut;
+}
+
+/**
+ * @brief kmAABBExpandToContain
+ * @param pOut - The resulting AABB
+ * @param pIn - The original AABB
+ * @param other - Another AABB that you want pIn expanded to contain
+ * @return
+ */
+kmAABB* kmAABBExpandToContain(kmAABB* pOut, const kmAABB* pIn, const kmAABB* other) {
+    kmAABB result;
+
+    result.min.x = (pIn->min.x < other->min.x)?pIn->min.x:other->min.x;
+    result.max.x = (pIn->max.x > other->max.x)?pIn->max.x:other->max.x;
+    result.min.y = (pIn->min.y < other->min.y)?pIn->min.y:other->min.y;
+    result.max.y = (pIn->max.y > other->max.y)?pIn->max.y:other->max.y;
+    result.min.z = (pIn->min.z < other->min.z)?pIn->min.z:other->min.z;
+    result.max.z = (pIn->max.z > other->max.z)?pIn->max.z:other->max.z;
+
+    kmAABBAssign(pOut, &result);
+
+    return pOut;
 }
