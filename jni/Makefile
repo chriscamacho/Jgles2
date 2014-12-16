@@ -1,9 +1,13 @@
 CC=gcc
 
-JAVA_HOME=`readlink -f /usr/bin/javac | sed "s:bin/javac::"`
+#JAVA_HOME=`readlink -f /usr/bin/javac | sed "s:bin/javac::"`
+# gentoo is a little less KISS !
+JAVA_HOME=/usr/lib/jvm/icedtea-7
 
 LIBS = `pkg-config egl --libs` `pkg-config glesv2 --libs` -lm -lc -lX11 
-CFLAGS = -fPIC `pkg-config egl --cflags` `pkg-config glesv2 --cflags` -I$(JAVA_HOME)/include/ -Ikazmath/
+#CFLAGS = -fPIC `pkg-config egl --cflags` `pkg-config glesv2 --cflags` -I$(JAVA_HOME)/include/ -Ikazmath/
+# iced tea has some additional headers in include/linux
+CFLAGS = -fPIC `pkg-config egl --cflags` `pkg-config glesv2 --cflags` -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux -Ikazmath/
 OBJ = jni/util.o jni/egl.o jni/gles2.o jni/kazmath.o
 
 #kazmath
