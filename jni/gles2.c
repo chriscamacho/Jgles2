@@ -220,14 +220,14 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glDrawArrays
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttribPointer
-  (JNIEnv *e, jclass c, jint index, jint size, jint type, jint normalized, jint stride, jobject pointer)
+  (JNIEnv *e, jclass c, jint index, jint size, jint type, jboolean normalized, jint stride, jlong pointer)
 {
-    GLvoid* ptr = (GLvoid*)(*e)->GetDirectBufferAddress(e, pointer);
-    glVertexAttribPointer(index,size,type,normalized,stride,ptr);
+    //GLvoid* ptr = (GLvoid*)(*e)->GetDirectBufferAddress(e, pointer);
+    glVertexAttribPointer(index,size,type,normalized,stride,(void*)pointer);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glUniformMatrix4fv
-  (JNIEnv *e, jclass c, jint location, jint count, jint transpose, jobject pointer)
+  (JNIEnv *e, jclass c, jint location, jint count, jboolean transpose, jobject pointer)
 {
     GLvoid* ptr = (GLvoid*)(*e)->GetDirectBufferAddress(e, pointer);
     glUniformMatrix4fv(location,count,transpose,ptr);        
@@ -896,4 +896,10 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glVertexAttrib4fv
 {
     GLvoid* v = (GLvoid*)(*e)->GetDirectBufferAddress(e, jv);
     glVertexAttrib4fv(i,v);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBindBuffer
+  (JNIEnv *e, jclass c, jint target, jint buffer)
+{
+	glBindBuffer(target, buffer);
 }

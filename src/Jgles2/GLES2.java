@@ -461,7 +461,7 @@ public class GLES2 {
     public static native void glClearDepthf(float d);
     public static native int glCheckFramebufferStatus(int target);
     public static native void glBufferSubData(int target,long offset,long size,ByteBuffer data);
-    public static native void glBufferData(int target,long size,ByteBuffer data,int usage);
+    public static native void glBufferData(int target,long size,FloatBuffer data,int usage);
     public static native void glBlendFuncSeparate(int srcRGB,int dstRGB,int srcAlpha,int dstAlpha);
     public static native void glBlendFunc(int sfactor, int dfactor);
     public static native void glEnable(int cap);
@@ -506,10 +506,12 @@ public class GLES2 {
     public static native void glEnableVertexAttribArray(int index);    
     public static native void glDrawArrays(int mode,int first,int count);
     public static native void glVertexAttribPointer(int index, int size,int type,
-                    int normalized, int stride, FloatBuffer pointer);
+                    boolean normalized, int stride, long pointer);
     public static native void glUniformMatrix4fv(int location, int count,
-                    int transpose,FloatBuffer value);
+                    boolean transpose,FloatBuffer value);
     public static native void glClear(int buffers);    
+    
+    public static native void glBindBuffer(int target,int buffer);
     
     static {
         System.loadLibrary("Jgles2");

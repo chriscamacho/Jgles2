@@ -25,15 +25,18 @@
 			name="compileTest"
 			depends="jni,Jgles2"
 			description="compile the test " >
-        <fileset dir="." includes="**/*.class"/>
+        <fileset dir="test" includes="**/*.class"/>
         <javac 
-                srcdir="."
+                srcdir="test"
                 classpath="./Jgles2.jar:."
                 includeantruntime="false"
                 debug="on"
                 debuglevel="lines,vars,source">
             <compilerarg value="-Xlint:all" />
             <compilerarg value="-Werror" />
+            <!-- maxerrs param must be seperate or space is picked up as a param -->
+            <compilerarg value="-Xmaxerrs" />
+            <compilerarg value="1" />
         </javac>
     </target>
     
@@ -47,8 +50,8 @@
     <target name="run" depends="jar,compileTest">
         <java
                 fork="true"
-                classname="test"
-                classpath="Jgles2.jar:.">
+                classname="Main"
+                classpath="Jgles2.jar:test">
             <sysproperty key="java.library.path" value="."/>
         </java>
     </target>        
