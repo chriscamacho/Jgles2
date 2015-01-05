@@ -38,6 +38,8 @@ Jgles2.EGL     access to libEGL
 Jgles2.GLES2   access to libGLES v2.0
 
 Jgles2.Kazmath subset of kazmath math lib (TODO "new" ray3)
+(considering depricating kazmath in favor of the various
+Java math routines in the sample application)
 
 
 
@@ -51,10 +53,10 @@ Its fairly close but there are some slight differences for convenience
 So is it ready to rock and roll ?
 ---------------------------------
 
-...well very close! At the moment the demo show swapping between fullscreen
-and windowed mode on the fly.  Texture from png's, shaders and even render to
-texture in addition the demo moves the view depending on mouse position / button
-press.  There are over 100 GLES functions wrapped as lightly as possible 
+Basically yes - there are a small handful of routines unwrapped that
+I don't use (contributions welcome) There is a full application
+demonstrating gimbaless rotation, the library has also been tested using
+techniques like render to texture.
 
 
 Porting - you can help
@@ -107,9 +109,6 @@ the jni wrapper uses.
 (none XORG platforms must translate their keycodes to match the codes in
 the util class ( KEY_* )
 
-
-I'd like to colaborate with someone to turn this into a Linux "driver" and also
-provide a windows driver (Sadly I'm not clever enough to do windows development)
 
 
 
