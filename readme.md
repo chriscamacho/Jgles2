@@ -26,27 +26,26 @@ the binary download.
 
 
 
-So is there a better way to organise a subset?
-----------------------------------------------
+How is Jgles2 organised ?
+-------------------------
 
-I aim to provide (in the end) just three (or four) classes
-
-Jgles2.util    some platform specific stuff, general utilities etc.
+There are just three classes
 
 Jgles2.EGL     access to libEGL
 
 Jgles2.GLES2   access to libGLES v2.0
 
-Jgles2.Kazmath subset of kazmath math lib (TODO "new" ray3)
-(considering depricating kazmath in favor of the various
-Java math routines in the sample application)
+Jgles2.util    some platform specific stuff, general utilities etc.
 
+There used to be a C math library wrapped as well, but there was little
+to be gained from this and there are various Math routines (matrix, 
+quaternion etc)
 
 
 Is it just like using GLES ?
 ----------------------------
 
-Its fairly close but there are some slight differences for convenience
+Its close but there are a few slight differences for convenience
 
 
 

@@ -62,8 +62,6 @@
             <fileset dir="src/Jgles2" includes="**/*.class" defaultexcludes="false"/>
             <fileset dir="." includes="libJgles2.so" defaultexcludes="false"/>
             <fileset dir="jni" includes="**/*.o" defaultexcludes="false"/>
-            <fileset dir="kazmath" includes="libkazmath.a" defaultexcludes="false"/>
-            <fileset dir="kazmath" includes="**/*.o" defaultexcludes="false"/>
             <fileset dir="jni" includes="**/Jgles2_*.h" defaultexcludes="false"/>
             <fileset dir="." includes="**/*.jar" defaultexcludes="false"/>
         </delete>
