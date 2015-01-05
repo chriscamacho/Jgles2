@@ -250,4 +250,25 @@ JNIEXPORT jboolean JNICALL Java_Jgles2_util_resizeRequired
     return r;
 }
 
+// these are identical but are needed so that they can be
+// called from java with different types of buffer.
+JNIEXPORT jlong JNICALL Java_Jgles2_util_getFloatBufferPtr
+  (JNIEnv *e, jclass c, jobject buff)
+{
+	void* ptr = (void*)(*e)->GetDirectBufferAddress(e, buff);
+	return (jlong)ptr;
+}
 
+JNIEXPORT jlong JNICALL Java_Jgles2_util_getIntBufferPtr
+  (JNIEnv *e, jclass c, jobject buff)
+{
+	void* ptr = (void*)(*e)->GetDirectBufferAddress(e, buff);
+	return (jlong)ptr;
+}
+
+JNIEXPORT jlong JNICALL Java_Jgles2_util_getByteBufferPtr
+  (JNIEnv *e, jclass c, jobject buff)
+{
+	void* ptr = (void*)(*e)->GetDirectBufferAddress(e, buff);
+	return (jlong)ptr;
+}

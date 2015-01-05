@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static Jgles2.GLES2.*;
+import Jgles2.util;
 
 public class Print {
 
@@ -96,7 +97,7 @@ public class Print {
         vbo = val.get(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4 ,vertsBuffer , GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4 ,util.getFloatBufferPtr(vertsBuffer) , GL_STATIC_DRAW);
 
 		
 	}

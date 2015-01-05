@@ -276,10 +276,11 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBlendFuncSeparate
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBufferData
-  (JNIEnv *e, jclass c, jint t, jlong s, jobject jd, jint u)
+  (JNIEnv *e, jclass c, jint t, jlong s, jlong d, jint u)
+//  (JNIEnv *e, jclass c, jint t, jlong s, jobject jd, jint u)
 {
-    GLvoid* d = (GLvoid*)(*e)->GetDirectBufferAddress(e, jd);
-    glBufferData(t,s,d,u);    
+   // GLvoid* d = (GLvoid*)(*e)->GetDirectBufferAddress(e, jd);
+    glBufferData(t,s,(void*)d,u);    
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glBufferSubData

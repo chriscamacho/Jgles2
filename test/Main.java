@@ -190,7 +190,7 @@ public final class Main {
         int vbo2 = val.get(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4 ,vertsBuffer , GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4 ,util.getFloatBufferPtr(vertsBuffer) , GL_STATIC_DRAW);
 
         /*
          * load the box vert arrays into nio buffer
@@ -203,7 +203,7 @@ public final class Main {
         int vbo = val.get(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4, vertsBuffer , GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long)vertsBuffer.capacity()*4, util.getFloatBufferPtr(vertsBuffer) , GL_STATIC_DRAW);
 
 
         Mat4 mvp = new Mat4();		// Model View Projection

@@ -147,6 +147,9 @@ public class util {
     public static native int getMouseX();
     public static native int getMouseY();
     
+    public static native long getFloatBufferPtr(FloatBuffer buffer);
+    public static native long getIntBufferPtr(IntBuffer buffer);
+    public static native long getByteBufferPtr(ByteBuffer buffer);
     
     // as seen in Lwjgl (*4) - licence omitted by kind permission Brian Matzon
 	public static ByteBuffer createByteBuffer(int size) { return ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder()); }

@@ -436,7 +436,7 @@ public class GLES2 {
     public static native void glFrontFace(int mode);
     public static native void glGenBuffers(int n,IntBuffer buffers) ;
     public static native void glGenerateMipmap(int target);
-    public static native void glGetBooleanv(int pname,ByteBuffer params);
+    public static native void glGetBooleanv(int pname,IntBuffer params);
     public static native void glGetFloatv(int pname,FloatBuffer params);
     public static native void glGetIntegerv(int pname,IntBuffer params);
     public static native void glDepthMask(boolean flag);
@@ -461,7 +461,6 @@ public class GLES2 {
     public static native void glClearDepthf(float d);
     public static native int glCheckFramebufferStatus(int target);
     public static native void glBufferSubData(int target,long offset,long size,ByteBuffer data);
-    public static native void glBufferData(int target,long size,FloatBuffer data,int usage);
     public static native void glBlendFuncSeparate(int srcRGB,int dstRGB,int srcAlpha,int dstAlpha);
     public static native void glBlendFunc(int sfactor, int dfactor);
     public static native void glEnable(int cap);
@@ -491,6 +490,11 @@ public class GLES2 {
     // takes multiples like the C version?
     public static native void glShaderSource(int shader, String shaderText);
     
+    // this you must use the util class to find a pointer to your data buffer
+    // because the data could be int's or float's for example 
+    public static native void glBufferData(int target,long size,long data,int usage);
+    
+    
     public static native void glCompileShader(int shader);
     public static native void glGetShaderiv(int shader, int attrib, IntBuffer val);
     public static native int glCreateProgram();
@@ -512,6 +516,7 @@ public class GLES2 {
     public static native void glClear(int buffers);    
     
     public static native void glBindBuffer(int target,int buffer);
+    
     
     static {
         System.loadLibrary("Jgles2");
