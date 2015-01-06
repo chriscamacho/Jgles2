@@ -4,15 +4,18 @@ package Jgles2;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
+/**
+ * a very thin wrapper around libEGL use the functions as you would from C
+ */
 public class EGL {
     
     /* QueryString targets */
-    public static final int EGL_VENDOR      =   0x3053;
+
     public static final int EGL_VERSION     =   0x3054;
     public static final int EGL_EXTENSIONS  =   0x3055;
     public static final int EGL_CLIENT_APIS =   0x308D;
 
-/* Config attributes */
+	/* Config attributes */
     public static final int EGL_BUFFER_SIZE			    =    0x3020;
     public static final int EGL_ALPHA_SIZE			    =    0x3021;
     public static final int EGL_BLUE_SIZE			    =    0x3022;
@@ -48,20 +51,20 @@ public class EGL {
     public static final int EGL_MATCH_NATIVE_PIXMAP		=    0x3041;	/* Pseudo-attribute (not queryable) */
     public static final int EGL_CONFORMANT			    =    0x3042;
 
-/* Config attribute values */
+	/* Config attribute values */
     public static final int EGL_SLOW_CONFIG			    =    0x3050;	/* EGL_CONFIG_CAVEAT value */
     public static final int EGL_NON_CONFORMANT_CONFIG	=    0x3051;	/* EGL_CONFIG_CAVEAT value */
     public static final int EGL_TRANSPARENT_RGB		    =    0x3052;	/* EGL_TRANSPARENT_TYPE value */
     public static final int EGL_RGB_BUFFER			    =    0x308E;	/* EGL_COLOR_BUFFER_TYPE value */
     public static final int EGL_LUMINANCE_BUFFER		=    0x308F;	/* EGL_COLOR_BUFFER_TYPE value */
 
-/* More config attribute values, for EGL_TEXTURE_FORMAT */
+	/* More config attribute values, for EGL_TEXTURE_FORMAT */
     public static final int EGL_NO_TEXTURE			=    0x305C;
     public static final int EGL_TEXTURE_RGB			=    0x305D;
     public static final int EGL_TEXTURE_RGBA		=    0x305E;
     public static final int EGL_TEXTURE_2D			=    0x305F;
 
-/* Config attribute mask bits */
+	/* Config attribute mask bits */
     public static final int EGL_PBUFFER_BIT			        =    0x0001;	/* EGL_SURFACE_TYPE mask bits */
     public static final int EGL_PIXMAP_BIT			        =    0x0002;	/* EGL_SURFACE_TYPE mask bits */
     public static final int EGL_WINDOW_BIT			        =    0x0004;	/* EGL_SURFACE_TYPE mask bits */
@@ -75,17 +78,17 @@ public class EGL {
     public static final int EGL_OPENGL_ES2_BIT		=    0x0004;	/* EGL_RENDERABLE_TYPE mask bits */
     public static final int EGL_OPENGL_BIT			=    0x0008;	/* EGL_RENDERABLE_TYPE mask bits */
 
-/* Out-of-band handle values */
+	/* Out-of-band handle values */
     public static final long EGL_DEFAULT_DISPLAY    =   0;
     public static final long EGL_NO_CONTEXT			=   0;
     public static final long EGL_NO_DISPLAY			=   0;
     public static final long EGL_NO_SURFACE			=   0;
 
-/* CreateContext attributes */
+	/* CreateContext attributes */
     public static final int EGL_CONTEXT_CLIENT_VERSION  =   0x3098;
 
 
-/* QuerySurface / SurfaceAttrib / CreatePbufferSurface targets */
+	/* QuerySurface / SurfaceAttrib / CreatePbufferSurface targets */
     public static final int EGL_HEIGHT			        =    0x3056;
     public static final int EGL_WIDTH			        =    0x3057;
     public static final int EGL_LARGEST_PBUFFER		    =    0x3058;
@@ -128,6 +131,6 @@ public class EGL {
     static public native boolean eglSwapInterval(long display, int interval);
     
     EGL() {
-        
+        System.out.println("NB do not instance me!");
     }
 }

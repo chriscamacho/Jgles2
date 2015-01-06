@@ -6,6 +6,9 @@ import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
 import java.nio.ByteBuffer;
 
+/** a thin wrapper aroung GLES2 where there are differences from the C
+ * library they should be mentioned here
+ */
 
 public class GLES2 {
     
@@ -346,6 +349,8 @@ public class GLES2 {
     // need to see a working example of this...
     void glGetVertexAttribPointerv(	int index,int pname,void **pointer)
 
+    
+    // I don't have a need for these maybe someone will contribute and test them...
     public static native void glReadPixels(int x,int y,int width,int height,
             int format,int type,ByteBuffer data);
 
@@ -486,12 +491,14 @@ public class GLES2 {
     public static native void glClearColor(float r, float g, float b, float a);
     public static native int glCreateShader(int type);
     
-    // differs as only accepts 1 shader TODO - worth providing alternitive that
-    // takes multiples like the C version?
+    /** differs as only accepts 1 shader 
+     * TODO - worth providing alternitive that
+     * takes multiples like the C version? */
     public static native void glShaderSource(int shader, String shaderText);
     
-    // this you must use the util class to find a pointer to your data buffer
-    // because the data could be int's or float's for example 
+    /** this differes from its C counterpart as you must use the util class 
+     * to find a pointer to your data buffer because the data could be int's 
+     * or float's for example */
     public static native void glBufferData(int target,long size,long data,int usage);
     
     
@@ -523,6 +530,6 @@ public class GLES2 {
     }    
     
     GLES2() {
-        
+        System.out.println("NB do not instance me!");
     }
 }

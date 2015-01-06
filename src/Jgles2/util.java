@@ -9,6 +9,9 @@ import java.nio.FloatBuffer;
 
 import static Jgles2.GLES2.*;
 
+/** routines to aid use of Jgles2 mainly for native window handling
+ * but a couple of simple short cut routines too */
+
 public class util {
 
     static {
@@ -133,37 +136,67 @@ public class util {
     public static final int     KEY_CURSD		=116;
 
 
-
+	/** Once a native window is created this will allow the window to be toggled
+	 * between fullscreen and windowed
+	 * 
+	 * @param full true for fullscreen, false for windowed */
     public static native void setFullscreen(long native_display,long native_window,boolean full);
+    
+    /** returns the default native display */
     public static native long get_native_display();
+    
+    /** creates a native window */
     public static native long make_native_window(long native_display,
                             long egl_display, long config, int x, int y, 
                             int width, int height, boolean fullscreen);
+    /** closes a window */
     public static native void closeWindow(long disp,long win);
+    
+    /** typically once per "frame" you should run this to ensure that
+     * native window events are handled and fed back to the native
+     * window handler and thence to your app */
     public static native void pumpEvents(long xDisplay,long win);
+    
+    /** query this to determine if the screen has been resized */
     public static native boolean resizeRequired();
+    
+    /** we currently assume only one window TODO handle per window */
     public static native int getWidth();
+
+    /** we currently assume only one window TODO handle per window */
     public static native int getHeight();
+
+	/** return the status of a particular key */
     public static native boolean keyDown(int k);
+    
+    /** returns the state of the mouse buttons */
     public static native int getMouseButtons();
     public static native int getMouseX();
     public static native int getMouseY();
     
+    /** get a native pointer to a FloatBuffer */ 
     public static native long getFloatBufferPtr(FloatBuffer buffer);
+    /** get a native pointer to a IntBuffer */ 
     public static native long getIntBufferPtr(IntBuffer buffer);
+    /** get a native pointer to a ByteBuffer */ 
     public static native long getByteBufferPtr(ByteBuffer buffer);
     
     // as seen in Lwjgl (*4) - licence omitted by kind permission Brian Matzon
+    /** create a direct byte buffer in native order */
 	public static ByteBuffer createByteBuffer(int size) { return ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder()); }
+    /** create a direct Int buffer backed by a byte buffer in native order */
 	public static IntBuffer createIntBuffer(int size) { return createByteBuffer(size << 2).asIntBuffer(); }
+    /** create a direct Long buffer backed by a byte buffer in native order */
 	public static LongBuffer createLongBuffer(int size) { return createByteBuffer(size << 3).asLongBuffer(); }
+    /** create a direct Float buffer backed by a byte buffer in native order */
 	public static FloatBuffer createFloatBuffer(int size) { return createByteBuffer(size << 2).asFloatBuffer();	}
     //
 
 
-
-
-
+	/** simply returns a handle to a shader program
+	 * @param name a simple identifier to enable easy recognition of error messages
+	 * @param vertShaderText the source code for the vertex shader
+	 * @param fragShaderText the source code for the fragment shader */
     public static int createShaderProgram(String name, String vertShaderText, String fragShaderText) {
         int fragShader, vertShader, program=0;
         int stat;
@@ -204,16 +237,19 @@ public class util {
         return program;
     }
 
-    public static void checkError(String tag) {
+	/** calls glGetError and returns a description of the error code
+	 * @return the error description string */
+    public String checkError() {
         int err = glGetError();
+        String es="" ;
         if (err!=GL_NO_ERROR) {
-            System.out.print("tag "+tag+" error:");
-            if (err==GL_INVALID_ENUM) System.out.println("Invalid enum\n");
-            if (err==GL_INVALID_VALUE) System.out.println("invalid value\n");
-            if (err==GL_INVALID_OPERATION) System.out.println("invalid operation\n");
-            if (err==GL_OUT_OF_MEMORY) System.out.println("out of memory\n");
-            System.exit(-1);
+            es = "unknown error code "+err;
+            if (err==GL_INVALID_ENUM) es = "Invalid enum\n";
+            if (err==GL_INVALID_VALUE) es = "invalid value\n";
+            if (err==GL_INVALID_OPERATION) es = "invalid operation\n";
+            if (err==GL_OUT_OF_MEMORY) es = "out of memory\n";
         }
+        return es;
     }
     
        
