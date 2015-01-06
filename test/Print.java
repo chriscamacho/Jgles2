@@ -66,7 +66,7 @@ public class Print {
 		"}\n";
 	
 	public static void init() {
-		program = testUtils.createShaderProgram("font",vertShaderText,fragShaderText);
+		program = util.createShaderProgram("font",vertShaderText,fragShaderText);
         glUseProgram(program);
            
 

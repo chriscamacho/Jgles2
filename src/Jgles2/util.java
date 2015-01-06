@@ -7,6 +7,8 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.FloatBuffer;
 
+import static Jgles2.GLES2.*;
+
 public class util {
 
     static {
@@ -158,8 +160,64 @@ public class util {
 	public static FloatBuffer createFloatBuffer(int size) { return createByteBuffer(size << 2).asFloatBuffer();	}
     //
 
-    
-    util() {
+
+
+
+
+    public static int createShaderProgram(String name, String vertShaderText, String fragShaderText) {
+        int fragShader, vertShader, program=0;
+        int stat;
+
+        final IntBuffer val = ByteBuffer.allocateDirect(4).asIntBuffer(); 
+               
+        fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragShader, fragShaderText);
+        glCompileShader(fragShader);
+        glGetShaderiv(fragShader, GL_COMPILE_STATUS, val);
+        if (val.get(0)==0) {
+            System.out.println("Error: "+name+" fragment shader did not compile!\n");
+            System.out.println("Shader log:\n"+glGetShaderInfoLog(fragShader));
+            System.exit(-1);
+        }
         
+        vertShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertShader, vertShaderText);
+        glCompileShader(vertShader);
+        glGetShaderiv(vertShader, GL_COMPILE_STATUS, val);
+        if (val.get(0)==0) {
+            System.out.println("Error: "+name+" vertex shader did not compile!\n");
+            System.out.println("Shader log:\n"+glGetShaderInfoLog(vertShader));
+            System.exit(-1);
+        }       
+
+        program = glCreateProgram();
+        glAttachShader(program, fragShader);
+        glAttachShader(program, vertShader);
+        glLinkProgram(program);
+        
+        glGetProgramiv(program, GL_LINK_STATUS, val);
+        if (val.get(0)==0) {
+            System.out.println("Shader log:\n"+glGetProgramInfoLog(program));
+            System.exit(-1);
+        }
+
+        return program;
+    }
+
+    public static void checkError(String tag) {
+        int err = glGetError();
+        if (err!=GL_NO_ERROR) {
+            System.out.print("tag "+tag+" error:");
+            if (err==GL_INVALID_ENUM) System.out.println("Invalid enum\n");
+            if (err==GL_INVALID_VALUE) System.out.println("invalid value\n");
+            if (err==GL_INVALID_OPERATION) System.out.println("invalid operation\n");
+            if (err==GL_OUT_OF_MEMORY) System.out.println("out of memory\n");
+            System.exit(-1);
+        }
+    }
+    
+       
+    util() {
+        System.out.println("NB do not instance me!");
     }
 }

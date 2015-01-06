@@ -13,11 +13,15 @@
         <fileset dir="Jgles2" includes="**/*.class"/>
         <javac
 			srcdir="src"
+			classpath="src"
 			includeantruntime="false"
 			debug="on"
             debuglevel="lines,vars,source">
             <compilerarg value="-Xlint:all" />
             <compilerarg value="-Werror" />
+            <!-- maxerrs param must be seperate or space is picked up as a param -->
+            <compilerarg value="-Xmaxerrs" />
+            <compilerarg value="1" />
         </javac>
     </target>
     			

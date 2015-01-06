@@ -26,7 +26,7 @@ jni/gles2.o: jni/gles2.c jni/Jgles2_GLES2.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 jni/Jgles2_util.h: src/Jgles2/util.java
-	javac src/Jgles2/util.java
+	javac -classpath src src/Jgles2/util.java
 	javah -d jni -classpath src Jgles2.util
 	
 jni/Jgles2_EGL.h: src/Jgles2/EGL.java

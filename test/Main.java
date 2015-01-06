@@ -113,7 +113,7 @@ public final class Main {
 
         glActiveTexture(GL_TEXTURE0);
 
-        texture = testUtils.loadTexture("data/wall.png",false);
+        texture = loadPNGtexture("data/wall.png",false);
 
         /*
          * vertex and fragment shaders
@@ -145,7 +145,7 @@ public final class Main {
             "}\n";
 
         
-        int program = testUtils.createShaderProgram("main", vertShaderText,fragShaderText);
+        int program = util.createShaderProgram("main", vertShaderText,fragShaderText);
         glUseProgram(program);
 
         /*
@@ -238,8 +238,8 @@ public final class Main {
         glEnable(GL_DEPTH_TEST);
         
         
-        int camoTex = testUtils.loadTexture("data/camo.png",true);
-        int stripeTex = testUtils.loadTexture("data/font.png",true);
+        int camoTex = loadPNGtexture("data/camo.png",true);
+        int stripeTex = loadPNGtexture("data/font.png",true);
         // printers now share common vertex buffers etc
         Print.init();
         
@@ -454,6 +454,42 @@ public final class Main {
 
         vp.set(perspective);
         vp.multiply(view);
+    }
+
+
+
+    public static int loadPNGtexture(String fileName, boolean withAlpha) {
+        int texture=0;
+        try {
+            FileInputStream in = new FileInputStream(fileName);
+            PNGDecoder decoder = new PNGDecoder(in);
+
+            int sz=3;
+            int gf=GL_RGB;
+            PNGDecoder.Format pf=PNGDecoder.RGB;
+            if (withAlpha) {
+                sz=4;
+                gf=GL_RGBA;
+                pf=PNGDecoder.RGBA;
+            }
+            ByteBuffer buf = ByteBuffer.allocateDirect(sz*decoder.getWidth()*decoder.getHeight());
+            decoder.decode(buf, decoder.getWidth()*sz, pf);
+            buf.flip();
+
+            IntBuffer val = ByteBuffer.allocateDirect(4).asIntBuffer();
+            glGenTextures(1,val);
+            texture=val.get(0);
+            
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, gf, decoder.getWidth(), decoder.getHeight(), 0,
+                    gf, GL_UNSIGNED_BYTE, buf);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();   
+        }
+        return texture;
     }
 
 }
