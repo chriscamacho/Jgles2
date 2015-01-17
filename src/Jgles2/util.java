@@ -18,161 +18,130 @@ public class util {
         System.loadLibrary("Jgles2");
     }
 
-    // other platforms will need to translate their key values
-    // into these values
-    
-    public static final int     KEY_ESC			=9;
-    public static final int     KEY_ONE			=10;
-    public static final int     KEY_TWO			=11;
-    public static final int     KEY_THREE		=12;
-    public static final int     KEY_FOUR		=13;
-    public static final int     KEY_FIVE		=14;
-    public static final int     KEY_SIX			=15;
-    public static final int     KEY_SEVEN		=16;
-    public static final int     KEY_EIGHT		=17;
-    public static final int     KEY_NINE		=18;
-    public static final int     KEY_ZERO		=19;
-    public static final int     KEY_MINUS		=20;
+	// same as GLFW values but shortened to easy typing 
+    public static final int     KEY_SPACE              =	32;
+    public static final int     KEY_APOSTROPHE         =	39;  /* ' */
+    public static final int     KEY_COMMA              =	44;  /* , */
+    public static final int     KEY_MINUS              =	45;  /* - */
+    public static final int     KEY_PERIOD             =	46;  /* . */
+    public static final int     KEY_SLASH              =	47;  /* / */
+    public static final int     KEY_0                  =	48;
+    public static final int     KEY_1                  =	49;
+    public static final int     KEY_2                  =	50;
+    public static final int     KEY_3                  =	51;
+    public static final int     KEY_4                  =	52;
+    public static final int     KEY_5                  =	53;
+    public static final int     KEY_6                  =	54;
+    public static final int     KEY_7                  =	55;
+    public static final int     KEY_8                  =	56;
+    public static final int     KEY_9                  =	57;
+    public static final int     KEY_SEMICOLON          =	59;  /* ; */
+    public static final int     KEY_EQUAL              =	61;  /* = */
+    public static final int     KEY_A                  =	65;
+    public static final int     KEY_B                  =	66;
+    public static final int     KEY_C                  =	67;
+    public static final int     KEY_D                  =	68;
+    public static final int     KEY_E                  =	69;
+    public static final int     KEY_F                  =	70;
+    public static final int     KEY_G                  =	71;
+    public static final int     KEY_H                  =	72;
+    public static final int     KEY_I                  =	73;
+    public static final int     KEY_J                  =	74;
+    public static final int     KEY_K                  =	75;
+    public static final int     KEY_L                  =	76;
+    public static final int     KEY_M                  =	77;
+    public static final int     KEY_N                  =	78;
+    public static final int     KEY_O                  =	79;
+    public static final int     KEY_P                  =	80;
+    public static final int     KEY_Q                  =	81;
+    public static final int     KEY_R                  =	82;
+    public static final int     KEY_S                  =	83;
+    public static final int     KEY_T                  =	84;
+    public static final int     KEY_U                  =	85;
+    public static final int     KEY_V                  =	86;
+    public static final int     KEY_W                  =	87;
+    public static final int     KEY_X                  =	88;
+    public static final int     KEY_Y                  =	89;
+    public static final int     KEY_Z                  =	90;
+    public static final int     KEY_LEFT_BRACKET       =	91;  /* [ */
+    public static final int     KEY_BACKSLASH          =	92;  /* \ */
+    public static final int     KEY_RIGHT_BRACKET      =	93;  /* ] */
+    public static final int     KEY_GRAVE_ACCENT       =	96;  /* ` */
+    public static final int     KEY_WORLD_1            =	161; /* non-US #1 */
+    public static final int     KEY_WORLD_2            =	162; /* non-US #2 */
 
-    public static final int     KEY_TAB 		=23;
-    public static final int     KEY_Q			=24;
-    public static final int     KEY_W			=25;
-    public static final int     KEY_E			=26;
-    public static final int     KEY_R			=27;
-    public static final int     KEY_T			=28;
-    public static final int     KEY_Y			=29;
-    public static final int     KEY_U			=30;
-    public static final int     KEY_I			=31;
-    public static final int     KEY_O			=32;
-    public static final int     KEY_P			=33;
-    public static final int     KEY_LBRACKET	=34;
-    public static final int     KEY_RBRACKET	=35;
-    public static final int     KEY_RETURN		=36;
-    public static final int     KEY_LCTRL		=37;
-    public static final int     KEY_A			=38;
-    public static final int     KEY_S			=39;
-    public static final int     KEY_D			=40;
-    public static final int     KEY_F			=41;
-    public static final int     KEY_G			=42;
-    public static final int     KEY_H			=43;
-    public static final int     KEY_J			=44;
-    public static final int     KEY_K			=45;
-    public static final int     KEY_L			=46;
-    public static final int     KEY_SEMICOLON	=47;
-    public static final int     KEY_APOST		=48;
-    public static final int     KEY_BACKTICK	=49;
-    public static final int     KEY_LSHIFT		=50;
-    public static final int     KEY_HASH		=51;
-    public static final int     KEY_Z			=52;
-    public static final int     KEY_X			=53;
-    public static final int     KEY_C			=54;
-    public static final int     KEY_V			=55;
-    public static final int     KEY_B			=56;
-    public static final int     KEY_N			=57;
-    public static final int     KEY_M			=58;
-    public static final int     KEY_COMMA		=59;
-    public static final int     KEY_PERIOD		=60;
-    public static final int     KEY_BSLASH		=61;
-    public static final int     KEY_RSHIFT		=62;
-    public static final int     KEY_NUMMULT		=63;
-    public static final int     KEY_LALT		=64;
-    public static final int     KEY_SPACE		=65;
-    public static final int     KEY_CAPS		=66;
-    public static final int     KEY_F1			=67;
-    public static final int     KEY_F2			=68;
-    public static final int     KEY_F3			=69;
-    public static final int     KEY_F4			=70;
-    public static final int     KEY_F5			=71;
-    public static final int     KEY_F6			=72;
-    public static final int     KEY_F7			=73;
-    public static final int     KEY_F8			=74;
-    public static final int     KEY_F9			=75;
-    public static final int     KEY_F10			=76;
-    public static final int     KEY_NUMLOCK		=77;
-    public static final int     KEY_SCLOCK		=78;
-    public static final int     KEY_NUM7		=79;
-    public static final int     KEY_NUM8		=80;
-    public static final int     KEY_NUM9		=81;
-    public static final int     KEY_NUMMINUS	=82;
-    public static final int     KEY_NUM4		=83;
-    public static final int     KEY_NUM5		=84;
-    public static final int     KEY_NUM6		=85;
-    public static final int     KEY_NUMPLUS		=86;
-    public static final int     KEY_NUM1		=87;
-    public static final int     KEY_NUM2		=88;
-    public static final int     KEY_NUM3		=89;
-    public static final int     KEY_NUMZERO		=90;
-    public static final int     KEY_NUMPERIOD	=91;
-
-    public static final int     KEY_FSLASH		=94;
-    public static final int     KEY_F11			=95;
-    public static final int     KEY_F12			=96;
-
-    public static final int     KEY_NUMENTER	=104;
-    public static final int     KEY_RCTRL		=105;
-    public static final int     KEY_NUMSLASH	=106;
-    public static final int     KEY_SYSRQ		=107;
-    public static final int     KEY_ALTGR		=108;
-
-    public static final int     KEY_HOME		=110;
-
-    public static final int     KEY_PGUP		=112;
-
-    public static final int     KEY_END			=115;
-
-    public static final int     KEY_PGDOWN		=117;
-    public static final int     KEY_INSERT		=118;
-    public static final int     KEY_DELETE		=119;
-
-    public static final int     KEY_BREAK		=127;
-
-    public static final int     KEY_LMETA		=133;
-    public static final int     KEY_RMETA		=134;
-    public static final int     KEY_MENU		=135;
-
-    public static final int     KEY_CURSL		=113;
-    public static final int     KEY_CURSR		=114;
-    public static final int     KEY_CURSU		=111;
-    public static final int     KEY_CURSD		=116;
-
-
-	/** Once a native window is created this will allow the window to be toggled
-	 * between fullscreen and windowed
-	 * 
-	 * @param full true for fullscreen, false for windowed */
-    public static native void setFullscreen(long native_display,long native_window,boolean full);
-    
-    /** returns the default native display */
-    public static native long get_native_display();
-    
-    /** creates a native window */
-    public static native long make_native_window(long native_display,
-                            long egl_display, long config, int x, int y, 
-                            int width, int height, boolean fullscreen);
-    /** closes a window */
-    public static native void closeWindow(long disp,long win);
-    
-    /** typically once per "frame" you should run this to ensure that
-     * native window events are handled and fed back to the native
-     * window handler and thence to your app */
-    public static native void pumpEvents(long xDisplay,long win);
-    
-    /** query this to determine if the screen has been resized */
-    public static native boolean resizeRequired();
-    
-    /** we currently assume only one window TODO handle per window */
-    public static native int getWidth();
-
-    /** we currently assume only one window TODO handle per window */
-    public static native int getHeight();
-
-	/** return the status of a particular key */
-    public static native boolean keyDown(int k);
-    
-    /** returns the state of the mouse buttons */
-    public static native int getMouseButtons();
-    public static native int getMouseX();
-    public static native int getMouseY();
+/* Function keys */
+    public static final int     KEY_ESCAPE             =	256;
+    public static final int     KEY_ENTER              =	257;
+    public static final int     KEY_TAB                =	258;
+    public static final int     KEY_BACKSPACE          =	259;
+    public static final int     KEY_INSERT             =	260;
+    public static final int     KEY_DELETE             =	261;
+    public static final int     KEY_RIGHT              =	262;
+    public static final int     KEY_LEFT               =	263;
+    public static final int     KEY_DOWN               =	264;
+    public static final int     KEY_UP                 =	265;
+    public static final int     KEY_PAGE_UP            =	266;
+    public static final int     KEY_PAGE_DOWN          =	267;
+    public static final int     KEY_HOME               =	268;
+    public static final int     KEY_END                =	269;
+    public static final int     KEY_CAPS_LOCK          =	280;
+    public static final int     KEY_SCROLL_LOCK        =	281;
+    public static final int     KEY_NUM_LOCK           =	282;
+    public static final int     KEY_PRINT_SCREEN       =	283;
+    public static final int     KEY_PAUSE              =	284;
+    public static final int     KEY_F1                 =	290;
+    public static final int     KEY_F2                 =	291;
+    public static final int     KEY_F3                 =	292;
+    public static final int     KEY_F4                 =	293;
+    public static final int     KEY_F5                 =	294;
+    public static final int     KEY_F6                 =	295;
+    public static final int     KEY_F7                 =	296;
+    public static final int     KEY_F8                 =	297;
+    public static final int     KEY_F9                 =	298;
+    public static final int     KEY_F10                =	299;
+    public static final int     KEY_F11                =	300;
+    public static final int     KEY_F12                =	301;
+    public static final int     KEY_F13                =	302;
+    public static final int     KEY_F14                =	303;
+    public static final int     KEY_F15                =	304;
+    public static final int     KEY_F16                =	305;
+    public static final int     KEY_F17                =	306;
+    public static final int     KEY_F18                =	307;
+    public static final int     KEY_F19                =	308;
+    public static final int     KEY_F20                =	309;
+    public static final int     KEY_F21                =	310;
+    public static final int     KEY_F22                =	311;
+    public static final int     KEY_F23                =	312;
+    public static final int     KEY_F24                =	313;
+    public static final int     KEY_F25                =	314;
+    public static final int     KEY_KP_0               =	320;
+    public static final int     KEY_KP_1               =	321;
+    public static final int     KEY_KP_2               =	322;
+    public static final int     KEY_KP_3               =	323;
+    public static final int     KEY_KP_4               =	324;
+    public static final int     KEY_KP_5               =	325;
+    public static final int     KEY_KP_6               =	326;
+    public static final int     KEY_KP_7               =	327;
+    public static final int     KEY_KP_8               =	328;
+    public static final int     KEY_KP_9               =	329;
+    public static final int     KEY_KP_DECIMAL         =	330;
+    public static final int     KEY_KP_DIVIDE          =	331;
+    public static final int     KEY_KP_MULTIPLY        =	332;
+    public static final int     KEY_KP_SUBTRACT        =	333;
+    public static final int     KEY_KP_ADD             =	334;
+    public static final int     KEY_KP_ENTER           =	335;
+    public static final int     KEY_KP_EQUAL           =	336;
+    public static final int     KEY_LEFT_SHIFT         =	340;
+    public static final int     KEY_LEFT_CONTROL       =	341;
+    public static final int     KEY_LEFT_ALT           =	342;
+    public static final int     KEY_LEFT_SUPER         =	343;
+    public static final int     KEY_RIGHT_SHIFT        =	344;
+    public static final int     KEY_RIGHT_CONTROL      =	345;
+    public static final int     KEY_RIGHT_ALT          =	346;
+    public static final int     KEY_RIGHT_SUPER        =	347;
+    public static final int     KEY_MENU               =	348;
+   
     
     /** get a native pointer to a FloatBuffer */ 
     public static native long getFloatBufferPtr(FloatBuffer buffer);
@@ -192,6 +161,45 @@ public class util {
 	public static FloatBuffer createFloatBuffer(int size) { return createByteBuffer(size << 2).asFloatBuffer();	}
     //
 
+
+
+    
+    /** query this to determine if the screen has been resized */
+    public static native boolean resizeRequired();
+    
+    /** we currently assume only one window TODO handle per window */
+    public static native int getWidth();
+
+    /** we currently assume only one window TODO handle per window */
+    public static native int getHeight();
+    
+    /** returns the state of the mouse buttons */
+    public static native int getMouseButtons();
+    public static native int getMouseX();
+    public static native int getMouseY();
+
+	/** initialise the native context support */
+	public static native int createWindow(int w, int h, String title, boolean fullscreen);
+	
+	/** has the window been closed */
+	public static native boolean shouldClose();
+	
+	/** time since native context started */
+	public static native double getTime();
+	
+	/** swap display buffers */
+	public static native void swapBuffer();
+	
+	/** update native input system */
+	public static native void pollEvents();
+	
+	/** is a key currently down */
+	public static native boolean keyDown(int key);
+	
+	/** close down all the native context support */
+	public static native void terminate();
+
+	
 
 	/** simply returns a handle to a shader program
 	 * @param name a simple identifier to enable easy recognition of error messages
@@ -254,6 +262,6 @@ public class util {
     
        
     util() {
-        System.out.println("NB do not instance me!");
+        System.out.println("NB do not instance util singleton class!");
     }
 }

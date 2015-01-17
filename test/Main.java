@@ -1,5 +1,5 @@
 import Jgles2.util;
-import Jgles2.EGL;
+//import Jgles2.EGL;
 import static Jgles2.GLES2.*;
 
 import java.io.IOException;
@@ -28,6 +28,8 @@ public final class Main {
 	Vec3 centre =   new Vec3(0,0,0);
 	Vec3 up     =   new Vec3(0,1f,0);
 
+	// val is a integer intBuffer which is reused for various GLES int return values
+	IntBuffer val = util.createIntBuffer(2);
 
 	private Main() { }
 
@@ -39,74 +41,19 @@ public final class Main {
 	}
 
 	private void run() {
-		
-		int attribs[] = {
-            EGL.EGL_RED_SIZE, 1, 
-            EGL.EGL_GREEN_SIZE, 1,
-            EGL.EGL_BLUE_SIZE, 1,
-            EGL.EGL_ALPHA_SIZE, 1,
-            EGL.EGL_DEPTH_SIZE, 1,
-            EGL.EGL_RENDERABLE_TYPE, EGL.EGL_OPENGL_ES2_BIT,
-            EGL.EGL_NONE // end of list
-        };
-        
-        int ctx_attribs[] = {
-            EGL.EGL_CONTEXT_CLIENT_VERSION, 2,
-            EGL.EGL_NONE // end of list
-        };
-        // buffers for EGL attributs 
-        IntBuffer attribsBuffer = util.createIntBuffer(attribs.length);
-        attribsBuffer.put(attribs);
-        
-        IntBuffer ctx_attribsBuffer = util.createIntBuffer(ctx_attribs.length);
-        ctx_attribsBuffer.put(ctx_attribs);
-        
-        long native_display = util.get_native_display();
-        long egl_display = EGL.eglGetDisplay( native_display );
-        
-        if (!EGL.eglInitialize(egl_display)) {
-            System.out.println("EGL failed to initialise");
-            System.exit(-1);
-        }
 
-        // val is a integer intBuffer which is reused for various int return values
-        IntBuffer val = util.createIntBuffer(2);
-        
-        int config_size=1;
-        LongBuffer configsBuffer = util.createLongBuffer(config_size);
-        
-        if (!EGL.eglChooseConfig(egl_display, attribsBuffer,
-                                    configsBuffer, config_size, val)) {
-            System.out.println("failed to get an EGL config");
-            System.exit(-1);            
-        }
-
-        long config=configsBuffer.get(0); 
-        // last 5 parameters of make_native_window are
-        // coordinates of top left corner of window, window width and height
-        // and finally a flag for fullscreen
-        long native_win = util.make_native_window(native_display, egl_display, config,
-                    0, 0, winWidth, winHeight, false);
-                    
-        long egl_context = EGL.eglCreateContext(egl_display, config, EGL.EGL_NO_CONTEXT, ctx_attribsBuffer );
-        if (egl_context==0) {
-            System.out.println("failed to get an EGL context");
-            System.exit(-1);
-        }
-        
-        long egl_surface = EGL.eglCreateWindowSurface(egl_display, config, native_win, null);
-        if (egl_surface == 0) {
-            System.out.println("failed to create a windowed surface");
-            System.exit(-1);
-        }      
-        
-        if (!EGL.eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context)) {
-            System.out.println("eglMakeCurrent failed");
-            System.out.println("error code " + Integer.toHexString(EGL.eglGetError()));
-            System.exit(-1);
-        }	
+		util.createWindow(640, 480, "Jgles2", false);
 		
-		updateProjection(640,480);
+		
+		// just for lol's
+        System.out.println("Vendor: "+glGetString(GL_VENDOR));
+        System.out.println("Renderer: "+glGetString(GL_RENDERER));
+        System.out.println("Version: "+glGetString(GL_VERSION));
+        System.out.println("shader language version: "+glGetString(GL_SHADING_LANGUAGE_VERSION));
+        //System.out.println("Extensions: "+glGetString(GL_EXTENSIONS)); 
+		
+			
+		updateProjection(640, 480);
 
 
         int texture=0; 
@@ -224,8 +171,8 @@ public final class Main {
          */
         float xa=0,ya=0,za=0;
         float x=0,y=0,z=-3;
-        long startTime = System.currentTimeMillis();
-        double thisTime = (System.currentTimeMillis()-startTime)/1000;//glfwGetTime();
+        //long startTime = System.currentTimeMillis();
+        double thisTime = util.getTime();
         double lastTime = 0;
         float delta = 0;
 
@@ -250,22 +197,14 @@ public final class Main {
         float a=0;
         float ty=300;
         
-        boolean lastf=false;	// for fullscreen switching
-        boolean fs=false;
         /*
          * The "main loop" for our demo
          */ 
-		while(!util.keyDown(util.KEY_ESC)) {
+         
+		while (!util.shouldClose() && !util.keyDown(util.KEY_ESCAPE)) {
 
-			util.pumpEvents(native_display,native_win);
-            
-            if (lastf!=util.keyDown(util.KEY_F)) {
-                if (util.keyDown(util.KEY_F)) {
-                    fs=!fs;
-                    util.setFullscreen(native_display,native_win,fs);
-                }
-            }
-            lastf=util.keyDown(util.KEY_F);
+            util.pollEvents();
+
             			
 			if (util.resizeRequired()) { width=util.getWidth(); height=util.getHeight(); }
                     
@@ -282,6 +221,7 @@ public final class Main {
 			// angle is an increment value
 			// translate is a cumulative value
 
+			
 			if (util.keyDown(util.KEY_Q)) xa =- ANG_SPEED * delta;
 			if (util.keyDown(util.KEY_W)) xa =+ ANG_SPEED * delta;
 			if (util.keyDown(util.KEY_A)) ya =- ANG_SPEED * delta;
@@ -426,20 +366,24 @@ public final class Main {
 					String.format("% .2f", modelRot.z)+", "+
 					String.format("% .2f", modelRot.w)
 			);
+			
+			smlPrint.render(0,160,"mouse ("+util.getMouseX()+
+									","+util.getMouseY()+
+									" buttons "+util.getMouseButtons());
 
 			Print.postRender();
             
             glDisable (GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
 			
-			EGL.eglSwapBuffers(egl_display, egl_surface); 
+			util.swapBuffer();
 
             lastTime = thisTime;
-            thisTime = ((float)(System.currentTimeMillis()-startTime)/1000f);//glfwGetTime();
+            thisTime = util.getTime();
             delta = (float)(thisTime-lastTime);
 		}
 
-		util.closeWindow(native_display,native_win);
+		util.terminate();
 	}
 
 
