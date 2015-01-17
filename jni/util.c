@@ -110,7 +110,7 @@ JNIEXPORT jint JNICALL Java_Jgles2_util_createWindow
 	
 	const char *title=NULL;
 	
-	if (jtitle!=NULL) title = (*e)->GetStringUTFChars(e, jtitle, 0);    
+	title = (*e)->GetStringUTFChars(e, jtitle, 0);    
     
 	glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
@@ -122,7 +122,7 @@ JNIEXPORT jint JNICALL Java_Jgles2_util_createWindow
 		__window = glfwCreateWindow(w, h, title, glfwGetPrimaryMonitor(), NULL);
 	}
 
-    if (jtitle!=NULL) (*e)->ReleaseStringUTFChars(e, jtitle, title);
+    (*e)->ReleaseStringUTFChars(e, jtitle, title);
 
 	if (__window) {    
 		glfwMakeContextCurrent(__window);

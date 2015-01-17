@@ -2,7 +2,7 @@
 Jgles2
 ------
 
-NB see porting at the end...
+NB see please porting at the end...
 
 
 Why GLES 2.0?
@@ -29,17 +29,17 @@ the binary download.
 How is Jgles2 organised ?
 -------------------------
 
-There are just three classes
-
-Jgles2.EGL     access to libEGL
+There are just two classes
 
 Jgles2.GLES2   access to libGLES v2.0
 
-Jgles2.util    some platform specific stuff, general utilities etc.
+Jgles2.util    some native context creation stuff, general utilities etc.
 
 There used to be a C math library wrapped as well, but there was little
 to be gained from this and there are various Math routines (matrix, 
-quaternion etc)
+quaternion etc) in the Java demo. Further development has lead to the C 
+side using GLFW3 for creating a native context instead of X11
+this *should*! make it trivial to port to other platforms
 
 
 Is it just like using GLES ?
@@ -58,55 +58,12 @@ demonstrating gimbaless rotation, the library has also been tested using
 techniques like render to texture.
 
 
-Porting - you can help
-----------------------
+Porting - you can help (yes! you!)
+----------------------------------
 
 If you want to port Jgles to your platform (it would certainly be
-apreciated) I have marked any platform specific with #ifdef XORG
-
-Currently there are just 4 critical sections
-
-get_native_display
-
-        returns the native handle used to create the EGL display handle
-
-make_native_window
-
-        native_display      the native display handle
-        egl_display         the EGL display handle
-        config              the chosen EGL config
-        x, y                position on the screen
-        width, height       width/height of window 
-        fullscreen          should it be fullscreen without decoration
-
-
-
-setFullscreen
-
-        native_display
-        native_window
-        full               boolean true for fullscreen false for windowed.
-
-    
-
-pumpEvents
-
-        native_Display
-        native_window
-
-
-this is resposible for collection keyboard and mouse events
-and notifying the application that the screen needs resizing
-its is responsible for modifying the following global variables
-the jni wrapper uses.
-
-        bool __keys[256]        keydown flags
-        int  __mouse[3]         x,y,buttons
-        bool __resize           resize needed
-        int  __width,__height   when resized the dimensions are stored here.
-
-(none XORG platforms must translate their keycodes to match the codes in
-the util class ( KEY_* )
+apreciated) You just need to be sure that GLFW3 can create and use a
+GLES2.0 context - porting should be easy! (famous last words!)
 
 
 
