@@ -40,10 +40,17 @@ public final class Main {
 
 	}
 
+	// only here as an example
+	public void keycallback(int key, int scan, int action, int mods) {
+		//System.out.println("key="+key+" scan="+scan+" action="+action+" mods="+mods);
+		if (key==util.KEY_ESCAPE) System.out.println("ttfn"); 
+	}
+
 	private void run() {
 
 		util.createWindow(640, 480, "Jgles2", false);
 		
+		util.setKeyCallback(this,"keycallback");
 		
 		// just for lol's
         System.out.println("Vendor: "+glGetString(GL_VENDOR));

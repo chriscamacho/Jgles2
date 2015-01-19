@@ -196,6 +196,9 @@ public class util {
 	/** is a key currently down */
 	public static native boolean keyDown(int key);
 	
+	/** this does not interfere with keyDown results and is optional */
+	public static native void setKeyCallback(Object instance, String method);
+	
 	/** close down all the native context support */
 	public static native void terminate();
 

@@ -102,6 +102,28 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 	}
 }    
     
+// is cacheing these that much faster?
+jclass kcbc;
+jmethodID kcbm;
+JNIEnv* kcbe;
+
+void keyCallBack(GLFWwindow* w, int key, int scan, int action, int mods)
+{
+	(*kcbe)->CallVoidMethod(kcbe, kcbc, kcbm, key, scan, action, mods);
+}
+
+JNIEXPORT void JNICALL Java_Jgles2_util_setKeyCallback
+  (JNIEnv *e, jclass c, jobject inst, jstring method) 
+{
+    const char *cbn = (*e)->GetStringUTFChars(e, method, 0);
+	kcbc = (*e)->GetObjectClass(e, inst);
+	kcbm = (*e)->GetMethodID(e, kcbc, cbn, "(IIII)V");
+    (*e)->ReleaseStringUTFChars(e, method, cbn);  
+	kcbe=e;
+	if (kcbm == 0) return;
+	glfwSetKeyCallback(__window,keyCallBack);
+	  
+}   
 
 JNIEXPORT jint JNICALL Java_Jgles2_util_createWindow
   (JNIEnv *e, jclass c, jint w, jint h, jstring jtitle, jboolean fullscreen) 
