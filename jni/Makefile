@@ -1,7 +1,7 @@
 CC=gcc
 
 #JAVA_HOME=`readlink -f /usr/bin/javac | sed "s:bin/javac::"`
-JAVA_HOME=/usr/lib/jvm/icedtea-7
+#JAVA_HOME=/usr/lib/jvm/icedtea-7
 
 #LIBS=$(shell pkg-config glfw3 --libs) $(shell pkg-config egl --libs) $(shell pkg-config glesv2 --libs) -lm -lc -lX11 
 LIBS=$(shell pkg-config glfw3 --libs) $(shell pkg-config glesv2 --libs) -lm -lc -lX11 
