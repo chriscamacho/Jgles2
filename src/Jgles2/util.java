@@ -258,7 +258,7 @@ public class util {
 
 	/** calls glGetError and returns a description of the error code
 	 * @return the error description string */
-	public String checkError() {
+	public static String checkError() {
 		int err = glGetError();
 		String es="" ;
 		if (err!=GL_NO_ERROR) {

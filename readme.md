@@ -86,6 +86,5 @@ GLES2.0 context - porting should be easy! (famous last words!)
 I'd like to chat about Jgles2, how to I contact you?
 ----------------------------------------------------
 
-my email account is codifies with a co uk domain of bedroomcoders, what will we do when
-spam bots can work that one out...
+Please use the contact form on bedroomcoders.co.uk
  
