@@ -7,9 +7,9 @@ CC=gcc
 LIBS=$(shell pkg-config glfw3 --libs) $(shell pkg-config glesv2 --libs) -lm -lc -lX11 
 
 # iced tea has some additional headers in include/linux
-#CFLAGS=-fPIC -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux $(shell pkg-config egl --cflags) $(shell pkg-config glfw3 --cflags)
+CFLAGS=-fPIC -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux $(shell pkg-config egl --cflags) $(shell pkg-config glfw3 --cflags)
 #OBJ = jni/util.o jni/egl.o jni/gles2.o
-CFLAGS=-fPIC -I$(JAVA_HOME)/../include/ -I$(JAVA_HOME)/../include/linux $(shell pkg-config glfw3 --cflags)
+#CFLAGS=-fPIC -I$(JAVA_HOME)/../include/ -I$(JAVA_HOME)/../include/linux $(shell pkg-config glfw3 --cflags)
 OBJ = jni/util.o jni/gles2.o
 
 
