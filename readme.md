@@ -24,6 +24,8 @@ and GL20 static classes (and sometimes you forget what lives where)
 At the time of writing LWJGL's GLES 2.0 classes are not included 
 with LWJGL.
 
+NB this was written before the release of lwjgl3 which is different entirely
+
 
 Why is the util (support) class so limited ?
 --------------------------------------------
@@ -32,9 +34,7 @@ Its purposely like that, writing 40+ lines of code to use EGL just to make
 a context even with a simplified X11 window creation utility doesn't make for
 a fast development path! While directly using GLFW3 is easier than that I 
 decided to simplify even further. As the vast majority of use cases only 
-need one native window... that's all you can have! You can always go 
-fullscreen and render multiple windows with a GLES GUI toolkit (comming soon!)
-
+need one native window... that's all you can have!
 
 
 How is Jgles2 organised ?
