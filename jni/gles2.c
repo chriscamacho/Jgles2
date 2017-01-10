@@ -479,7 +479,7 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glGetIntegerv
 (JNIEnv *e, jclass c, jint p, jobject jb)
 {
 	GLvoid* b = (GLvoid*)(*e)->GetDirectBufferAddress(e, jb);
-	glGetIntagerv(p,b);
+	glGetIntegerv(p,b);
 }
 
 JNIEXPORT jint JNICALL Java_Jgles2_GLES2_glGetAttribLocation
@@ -640,7 +640,7 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glLineWidth
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glPixelStorei
 (JNIEnv *e, jclass c, jint pn, jint p)
 {
-	glPixelStori(pn,p);
+	glPixelStorei(pn,p);
 }
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glPolygonOffset
