@@ -679,11 +679,13 @@ JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilFunc
 	glStencilFunc(f,r,m);
 }
 
+/*
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilFuncSeparate
 (JNIEnv *e, jclass c, jint fc, jint f, jint r, jint m)
 {
 	glStencilFuncSeperate(fc,f,r,m);
 }
+*/
 
 JNIEXPORT void JNICALL Java_Jgles2_GLES2_glStencilMask
 (JNIEnv *e, jclass c, jint m)
